@@ -5,6 +5,8 @@ import { Configuration, ConfigurationParameters } from '../api';
 // Конфигурация для модуля ApiModule
 export function apiConfigFactory(): Configuration {
     const params: ConfigurationParameters = {
+        // Передаем пустой объект, чтобы в сгенерированном коде не было ошибок
+        apiKeys: {},
         accessToken: () => {
             let token = AuthService.getAccessToken();
 
