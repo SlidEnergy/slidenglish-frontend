@@ -1,62 +1,46 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { Word } from 'src/app/api';
-import { MatTableDataSource, MatDialog, MatSort } from '@angular/material';
-import { Observable } from 'rxjs';
-import { filter, flatMap, map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { MessageDialogComponent } from 'src/app/shared/message-dialog/message-dialog.component';
+import {Component, OnInit, Input} from '@angular/core';
+import {Word} from 'src/app/api';
+import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-word-list',
-  templateUrl: './word-list.component.html',
-  styleUrls: ['./word-list.component.scss']
+    selector: 'app-word-list',
+    templateUrl: './word-list.component.html',
+    styleUrls: ['./word-list.component.scss']
 })
 export class WordListComponent implements OnInit {
-  @Input() words: Word[];
+    @Input() words: Word[];
+    @Input() itemAdding: (item: Word) => Observable<Word>;
+    @Input() itemUpdating: (item: Word) => Observable<Word>;
+    @Input() itemDeleting: (item: Word) => Observable<boolean>;
 
-  constructor(
-    private router: Router
-  ) { }
+    constructor(
+        private router: Router
+    ) {
+    }
 
-  ngOnInit() { }
-  //   this.dataSource.sort = this.sort;
-  //   this.dataSource.sortingDataAccessor = this.sortingDataAccessor.bind(this);
-  // }
+    ngOnInit() {
+    }
 
-  // sortingDataAccessor(bank: Bank, property: string) {
-  //   switch (property) {
-  //     case 'title': {
-  //       return bank.title.toLowerCase();
-  //     }
+    grid_rowClick(event) {
+        this.router.navigate(['words', event.data.id]);
+    }
 
-  //     default: return bank[property];
-  //   }
-  // }
+    grid_rowRemoving(event) {
+        this.itemDeleting(event.data).subscribe();
+    }
 
-  // row_click(row: Bank) {
-  //   this.router.navigate(['banks', row.id, 'accounts']);
-  // }
+    grid_rowUpdating(event) {
+        this.itemUpdating({ ...event.oldData, ...event.newData }).subscribe(data => {
+            let a = 4;
+            a++;
+        });
+    }
 
-  // addNew() {
-
-  // }
-
-  // editItem(bank: Bank) {
-
-  // }
-
-  // deleteItem(item: Bank) {
-  //   const dialogRef = this.dialog.open(MessageDialogComponent, {
-  //     data: { caption: 'Вы уверены что хотите отвязать банк?', text: item.title }
-  //   });
-
-  //   dialogRef.afterClosed().pipe(filter(x => x), flatMap(() => this.itemDeleting(item).pipe(filter(x => x))))
-  //     .subscribe(() => {
-  //       this.dataSource.data = this.dataSource.data.filter((value) => value.id != item.id);
-  //     });
-  // }
-
-  // getTotalOwnFunds() {
-  //   return this.dataSource.data.map(b => b.ownFunds).reduce((acc, value) => acc + value, 0);
-  // }
+    grid_rowInserting(event) {
+        this.itemAdding(event.data).subscribe(data => {
+            let a = 4;
+            a++;
+        });
+    }
 }

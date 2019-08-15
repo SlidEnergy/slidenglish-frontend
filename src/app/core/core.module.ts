@@ -15,6 +15,8 @@ import { coreReducer } from './core.store';
 import { CoreEffects } from './core.effects';
 import { EffectsModule } from '@ngrx/effects';
 
+import {WordsService} from './services/words.service';
+
 @NgModule({
     imports: [
         HttpClientModule,
@@ -25,8 +27,8 @@ import { EffectsModule } from '@ngrx/effects';
 
         // Сторонние компоненты
         StoreRouterConnectingModule,
-		StoreModule.forRoot({ core: coreReducer }),
-		EffectsModule.forRoot([CoreEffects]),
+  StoreModule.forRoot({ core: coreReducer }),
+  EffectsModule.forRoot([CoreEffects])
     ],
     declarations: [
         HeaderComponent
@@ -40,7 +42,9 @@ import { EffectsModule } from '@ngrx/effects';
             provide: HTTP_INTERCEPTORS,
             useClass: DateInterceptor,
             multi: true
-        }
+        },
+
+      WordsService
     ],
     exports: [
         HeaderComponent

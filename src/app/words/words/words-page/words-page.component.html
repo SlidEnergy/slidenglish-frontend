@@ -1,1 +1,8 @@
-<app-word-list [words]="words | async"></app-word-list>
+<app-word-list
+    [words]="words | async"
+    [itemAdding]="addItem"
+    [itemDeleting]="deleteItem"
+    [itemUpdating]="editItem"
+>
+
+</app-word-list>
