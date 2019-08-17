@@ -18,6 +18,7 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
 
+import { EditWordDto } from '../model/editWordDto';
 import { Word } from '../model/word';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -230,10 +231,10 @@ export class WordsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public update(id: number, word?: Word, observe?: 'body', reportProgress?: boolean): Observable<Word>;
-    public update(id: number, word?: Word, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Word>>;
-    public update(id: number, word?: Word, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Word>>;
-    public update(id: number, word?: Word, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public update(id: number, word?: EditWordDto, observe?: 'body', reportProgress?: boolean): Observable<Word>;
+    public update(id: number, word?: EditWordDto, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Word>>;
+    public update(id: number, word?: EditWordDto, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Word>>;
+    public update(id: number, word?: EditWordDto, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling update.');

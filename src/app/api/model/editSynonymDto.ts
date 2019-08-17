@@ -11,10 +11,7 @@
  */
 
 
-export interface Word { 
+export interface EditSynonymDto { 
     id?: number;
-    text: string;
-    association?: string;
-    description?: string;
-    synonyms?: Array<number>;
+    text?: string;
 }

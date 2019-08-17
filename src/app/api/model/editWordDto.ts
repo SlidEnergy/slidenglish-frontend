@@ -9,12 +9,13 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { EditSynonymDto } from './editSynonymDto';
 
 
-export interface Word { 
+export interface EditWordDto { 
     id?: number;
     text: string;
     association?: string;
     description?: string;
-    synonyms?: Array<number>;
+    synonyms?: Array<EditSynonymDto>;
 }
