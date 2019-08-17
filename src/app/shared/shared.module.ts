@@ -11,7 +11,7 @@ import {
 
 import { MatProgressButtonsModule } from 'mat-progress-buttons'
 import { MessageDialogComponent } from './message-dialog/message-dialog.component';
-import {DxDataGridModule} from 'devextreme-angular';
+import {DxDataGridModule, DxTagBoxModule} from 'devextreme-angular';
 
 @NgModule({
     declarations: [
@@ -58,7 +58,8 @@ import {DxDataGridModule} from 'devextreme-angular';
         MatPaginatorModule,
         MessageDialogComponent,
 
-      DxDataGridModule
+        DxDataGridModule,
+        DxTagBoxModule
     ],
     entryComponents: [
         MessageDialogComponent

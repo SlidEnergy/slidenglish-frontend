@@ -1,18 +1,47 @@
 <dx-data-grid [dataSource]="words"
-              (onRowClick)="grid_rowClick($event)"
               (onRowInserting)="grid_rowInserting($event)"
               (onRowUpdating)="grid_rowUpdating($event)"
               (onRowRemoving)="grid_rowRemoving($event)"
+              [masterDetail]="{ enabled: false, template: 'detail' }"
+              (onSelectionChanged)="selectionChanged($event)"
               keyExpr="id">
-  <dxo-editing
-    mode="form"
-    [allowDeleting]="true"
-    [allowUpdating]="true"
-    [allowAdding]="true">
-  </dxo-editing>
 
-  <dxi-column dataField="text" caption="Word"></dxi-column>
-  <dxi-column dataField="association"></dxi-column>
-  <dxi-column dataField="description"></dxi-column>
+    <!--    (onRowClick)="grid_rowClick($event)"-->
+    <dxo-editing
+        mode="form"
+        [allowDeleting]="true"
+        [allowUpdating]="true"
+        [allowAdding]="true">
+    </dxo-editing>
 
+    <dxi-column dataField="text" caption="Word"></dxi-column>
+    <dxi-column dataField="association"></dxi-column>
+    <dxi-column dataField="description"></dxi-column>
+    <dxi-column
+        dataField="synonyms"
+        [visible]="false">
+        <dxo-lookup
+            [dataSource]="getFilteredWords2"
+
+            displayExpr="text">
+        </dxo-lookup>
+        <dxo-form-item
+            [colSpan]="2"
+            editorType="dxTagBox"
+            [editorOptions]="{ acceptCustomValue: true, onCustomItemCreating: tagBox_customItemCreating}">
+        </dxo-form-item>
+    </dxi-column>
+
+    <dxo-selection mode="single"></dxo-selection>
+
+    <div *dxTemplate="let row of 'detail'">
+        <dx-tag-box
+            [items]="getFilteredWords(row.data)"
+
+            displayExpr="text"
+            valueExpr="id"
+            [acceptCustomValue]="true"
+            (onCustomItemCreating)="tagBox_customItemCreating($event)">
+        </dx-tag-box>
+    </div>
 </dx-data-grid>

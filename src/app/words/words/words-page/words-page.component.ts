@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Word } from 'src/app/api';
+import * as api from 'src/app/api';
 import { Observable, of } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 import { map, catchError } from 'rxjs/operators';
-import {WordsService} from '../../../core/services/words.service';
+import {WordsService} from '../../words.service';
+import {Word} from "../../../domain/words/word";
 
 @Component({
   selector: 'app-words-page',
@@ -22,7 +23,7 @@ export class WordsPageComponent implements OnInit {
     this.words = this.wordsService.getList();
   }
 
-  addItem = (item: Word) => {
+  addItem = (item: api.Word) => {
     return this.wordsService.add(item).pipe(
       map((result) => {
         this.snackBar.open('Банк привязан', undefined, { duration: 5000, panelClass: ['background-green'] });
@@ -34,7 +35,7 @@ export class WordsPageComponent implements OnInit {
       }));
   };
 
-  deleteItem = (item: Word) => {
+  deleteItem = (item: api.Word) => {
     return this.wordsService.delete(item.id).pipe(
       map((result) => {
         this.snackBar.open('Слово удалено', undefined, { duration: 5000, panelClass: ['background-green'] });
@@ -46,7 +47,7 @@ export class WordsPageComponent implements OnInit {
       }));
   };
 
-  editItem = (item: Word) => {
+  editItem = (item: api.EditWordDto) => {
     return this.wordsService.update(item.id, item).pipe(
       map((result) => {
         this.snackBar.open('Слово изменено', undefined, { duration: 5000, panelClass: ['background-green'] });
