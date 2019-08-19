@@ -99,7 +99,7 @@ export class WordListComponent implements OnInit {
 
     getFilteredWords2(options) {
         if (this.words && options.data)
-            return this.words.filter(x => x.id !== options.data.id && !options.data.synonyms.map(s => s.id).includes(x.id));
+            return this.words.filter(x => x.id !== options.data.id && (!options.data.synonyms || !options.data.synonyms.map(s => s.id).includes(x.id)));
         else
             return [];
     }
