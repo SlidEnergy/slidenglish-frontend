@@ -22,8 +22,9 @@ export class DataSet<T> {
         return this.service.add(word);
     }
 
-    update(id: number, word: api.EditWordDto) {
-        return this.service.update(id, word);
+    update(id: number, word: Word) {
+        let editWord = Object.assign(<Word>{}, word, { synonyms: word.synonyms.map(x=>x.id)});
+        return this.service.update(id, editWord);
     }
 
     delete(id: number) {

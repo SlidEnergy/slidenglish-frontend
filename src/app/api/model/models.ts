@@ -1,5 +1,3 @@
-export * from './editSynonymDto';
-export * from './editWordDto';
 export * from './loginBindingModel';
 export * from './problemDetails';
 export * from './registerBindingModel';

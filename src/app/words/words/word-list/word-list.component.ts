@@ -1,10 +1,13 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import * as api from 'src/app/api';
-import {Observable} from 'rxjs';
+import {forkJoin, iif, of} from 'rxjs';
 import {Router} from '@angular/router';
 
 import query from "devextreme/data/query";
 import {Word} from "../../../domain/words/word";
+import {WordsService} from "../../words.service";
+import {exhaustMap, filter, map, switchMap, tap} from "rxjs/operators";
+import {showError, showSuccess} from "../../../shared/utils/message-utils";
 
 @Component({
     selector: 'app-word-list',
@@ -14,12 +17,10 @@ import {Word} from "../../../domain/words/word";
 })
 export class WordListComponent implements OnInit {
     @Input() words: Word[];
-    @Input() itemAdding: (item: api.EditWordDto) => Observable<Word>;
-    @Input() itemUpdating: (item: api.Word) => Observable<Word>;
-    @Input() itemDeleting: (item: api.Word) => Observable<boolean>;
 
     constructor(
-        private router: Router
+        private router: Router,
+        private wordsService: WordsService
     ) {
         this.getFilteredWords2 = this.getFilteredWords2.bind(this);
     }
@@ -32,21 +33,55 @@ export class WordListComponent implements OnInit {
     }
 
     grid_rowRemoving(event) {
-        this.itemDeleting(event.data).subscribe();
+        this.wordsService.delete(event.data.id).subscribe(
+            value => showSuccess('Слово удалено'),
+            error => showError('Не удалось удалить слово'));
     }
 
     grid_rowUpdating(event) {
-        this.itemUpdating({ ...event.oldData, ...event.newData }).subscribe();
+        // Поток создания новых синонимов
+        let createNewSynonyms = of(filter(event.newData.synonyms))
+            .pipe(
+                // Дожидаемся создания всех слов на сервере
+                exhaustMap(value => forkJoin(event.newData.synonyms.filter(x => x.id === undefined).map(x => this.wordsService.add((x))))),
+                // Добавляем новые слова в коллекцию
+                tap((newSynonyms: Word[]) => newSynonyms.forEach(x => this.words.push(x)))
+            );
+
+        // Если нужно создавать синонимы, создаем их, иначе переходим к обновлению сущности
+        iif(() => event.newData.synonyms !== undefined,
+            // then
+            createNewSynonyms.pipe(map((newSynonyms: Word[]) => this.addNewSynonyms(this.getResultEntity(event), newSynonyms))),
+            // else
+            of(this.getResultEntity(event))
+        )
+            .pipe(
+                // Обновляем сущность
+                switchMap(word => this.wordsService.update(word.id, word)))
+            .subscribe(
+                value => showSuccess('Слово изменено'),
+                error => showError('Не удалось изменить слово')
+            );
+    }
+
+    addNewSynonyms(entity: Word, newSynonyms) {
+        return Object.assign(entity, {synonyms: [...entity.synonyms.filter(x => x.id), ...newSynonyms]});
+    }
+
+    getResultEntity<T>(event) {
+        return Object.assign(<T>{}, event.oldData, event.newData);
     }
 
     grid_rowInserting(event) {
-        this.itemAdding(event.data).subscribe();
+        this.wordsService.add(event.data)
+            .subscribe(
+                value => showSuccess('Слово добавлено'),
+                error => showError('Не удалось добавить слово')
+            );
     }
 
     tagBox_customItemCreating = (event) => {
-        let newWord: api.EditWordDto = { text: event.text };
-        this.words.unshift(<Word>newWord);
-        this.itemAdding(newWord).subscribe();
+        let newWord: api.Word = {text: event.text};
         event.customItem = newWord;
     }
 
@@ -55,7 +90,7 @@ export class WordListComponent implements OnInit {
         e.component.expandRow(e.currentSelectedRowKeys[0]);
     }
 
-    getFilteredWords (word: Word) {
+    getFilteredWords(word: Word) {
         return query(this.words)
             .filter(x => x.text !== word.text)
             .sortBy("text", true)
@@ -63,7 +98,7 @@ export class WordListComponent implements OnInit {
     }
 
     getFilteredWords2(options) {
-        if(this.words && options.data)
+        if (this.words && options.data)
             return this.words.filter(x => x.id !== options.data.id && !options.data.synonyms.map(s => s.id).includes(x.id));
         else
             return [];
