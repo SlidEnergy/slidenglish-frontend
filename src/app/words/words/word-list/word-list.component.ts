@@ -39,8 +39,10 @@ export class WordListComponent implements OnInit {
     }
 
     grid_rowUpdating(event) {
+        let hasNewSynonyms = event.newData.synonyms && event.newData.synonyms.filter(x => x.id === undefined).length > 0;
+
         // Поток создания новых синонимов
-        let createNewSynonyms = of(filter(event.newData.synonyms))
+        let createNewSynonyms = of(filter(() => hasNewSynonyms))
             .pipe(
                 // Дожидаемся создания всех слов на сервере
                 exhaustMap(value => forkJoin(event.newData.synonyms.filter(x => x.id === undefined).map(x => this.wordsService.add((x))))),
@@ -49,7 +51,7 @@ export class WordListComponent implements OnInit {
             );
 
         // Если нужно создавать синонимы, создаем их, иначе переходим к обновлению сущности
-        iif(() => event.newData.synonyms !== undefined,
+        iif(() => hasNewSynonyms,
             // then
             createNewSynonyms.pipe(map((newSynonyms: Word[]) => this.addNewSynonyms(this.getResultEntity(event), newSynonyms))),
             // else

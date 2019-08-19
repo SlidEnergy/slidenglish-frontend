@@ -29,7 +29,7 @@ export class WordDataSet {
     }
 
     toApi(word: Word) {
-        return Object.assign(<api.Word>{}, word, {synonyms: word.synonyms.map(x => x.id)});
+        return Object.assign(<api.Word>{}, word, {synonyms: word.synonyms && word.synonyms.map(x => x.id)});
     }
 
     toDomain(word: api.Word, list: api.Word[]) {
