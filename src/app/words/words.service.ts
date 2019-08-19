@@ -16,11 +16,11 @@ export class WordsService {
     return this.context.words.getList();
   }
 
-  add(word: api.Word) {
+  add(word: Word) {
     return this.context.words.add(word);
   }
 
-  update(id: number, word: api.EditWordDto) {
+  update(id: number, word: Word) {
       return this.context.words.update(id, word);
   }
 
