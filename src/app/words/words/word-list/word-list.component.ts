@@ -4,7 +4,7 @@ import {forkJoin, iif, of} from 'rxjs';
 import {Router} from '@angular/router';
 
 import query from "devextreme/data/query";
-import {Word} from "../../../domain/words/word";
+import {Word} from "../../../core/domain/words/word";
 import {WordsService} from "../../words.service";
 import {exhaustMap, filter, map, switchMap, tap} from "rxjs/operators";
 import {showError, showSuccess} from "../../../shared/utils/message-utils";

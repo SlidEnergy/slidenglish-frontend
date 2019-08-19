@@ -1,15 +1,21 @@
 import {Injectable} from '@angular/core';
 import {Word} from '../../api';
 import * as api from '../../api'
+import {AppState} from "../store/app-state";
+import {Store} from "@ngrx/store";
 
 @Injectable({
     providedIn: 'root'
 })
 export class WordsRepository {
-    constructor(private service: api.WordsService) {
-    }
+    constructor(
+        private service: api.WordsService,
+        private store: Store<AppState>
+    ) { }
 
-    getList() {
+    entities = this.store.select('words');
+
+    load() {
         return this.service.getList();
     }
 

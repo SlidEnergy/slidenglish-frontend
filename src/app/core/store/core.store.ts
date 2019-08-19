@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { ActionWithPayload } from '../shared/action-with-payload';
+import { ActionWithPayload } from '../../shared/action-with-payload';
 
 // STATE
 

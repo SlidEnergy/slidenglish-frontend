@@ -6,11 +6,11 @@ import { Store } from '@ngrx/store';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { ROUTER_NAVIGATION, RouterNavigationAction } from '@ngrx/router-store';
 
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth.service';
 import * as coreActions from './core.store';
-import { RouterStateSnapshot } from '@angular/router/src/router_state';
+import { RouterStateSnapshot } from '@angular/router';
 import { CoreState } from './core.store';
-import { AppState } from '../shared/app-state';
+import { AppState } from './app-state';
 
 // EFFECTS
 
