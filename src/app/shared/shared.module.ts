@@ -4,26 +4,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {
-    MatNativeDateModule, MatDatepickerModule, MatIconModule, MatButtonModule, MatCheckboxModule, MatToolbarModule,
-    MatCardModule, MatFormFieldModule, MatInputModule, MatRadioModule, MatListModule, MatSnackBarModule, MatTableModule,
-    MatAutocompleteModule, MatProgressSpinnerModule, MatSelectModule, MatSortModule, MatMenuModule, MatDialogModule, MatPaginatorModule
+    MatNativeDateModule, MatIconModule, MatButtonModule, MatToolbarModule, MatCardModule, MatFormFieldModule, MatInputModule,
+    MatSnackBarModule, MatProgressSpinnerModule, MatMenuModule
 } from '@angular/material';
 
 import { MatProgressButtonsModule } from 'mat-progress-buttons'
-import { MessageDialogComponent } from './message-dialog/message-dialog.component';
 import {DxDataGridModule, DxTagBoxModule} from 'devextreme-angular';
 
 @NgModule({
-    declarations: [
-        MessageDialogComponent,
-    ],
     imports: [
         CommonModule,
         FormsModule,
         RouterModule,
-        MatDialogModule,
         MatButtonModule,
-        MatTableModule,
         MatProgressSpinnerModule,
         MatCardModule,
     ],
@@ -36,35 +29,19 @@ import {DxDataGridModule, DxTagBoxModule} from 'devextreme-angular';
 
         MatNativeDateModule,
         FormsModule,
-        MatDatepickerModule,
         MatIconModule,
         MatButtonModule,
-        MatCheckboxModule,
         MatToolbarModule,
         MatCardModule,
         MatFormFieldModule,
         MatInputModule,
-        MatListModule,
-        MatRadioModule,
         MatSnackBarModule,
-        MatTableModule,
-        MatAutocompleteModule,
         MatProgressSpinnerModule,
         MatProgressButtonsModule,
-        MatSelectModule,
-        MatSortModule,
         MatMenuModule,
-        MatDialogModule,
-        MatPaginatorModule,
-        MessageDialogComponent,
 
         DxDataGridModule,
         DxTagBoxModule
-    ],
-    entryComponents: [
-        MessageDialogComponent
-    ],
-    providers: [
     ]
 })
 export class SharedModule { }
