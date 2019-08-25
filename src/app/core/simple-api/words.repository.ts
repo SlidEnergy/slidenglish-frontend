@@ -3,17 +3,22 @@ import {Word} from '../../api';
 import * as api from '../../api'
 import {AppState} from "../store/app-state";
 import {Store} from "@ngrx/store";
+import {EntityRepository} from "../domain/interfaces/entity-repository";
 
 @Injectable({
     providedIn: 'root'
 })
-export class WordsRepository {
+export class WordsRepository extends EntityRepository<Word> {
     constructor(
         private service: api.WordsService,
         private store: Store<AppState>
-    ) { }
+    ) {
+        super();
+    }
 
-    entities = this.store.select('words');
+    get entities() {
+        return this.load();
+    }
 
     load() {
         return this.service.getList();

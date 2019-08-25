@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { AuthService } from 'src/app/core/auth.service';
+import { AuthService } from 'src/app/core/auth/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatProgressButtonOptions } from 'mat-progress-buttons';
 
@@ -77,7 +77,7 @@ export class RegistrationComponentComponent implements OnInit {
 
   validate(): boolean {
     // проверяем имя пользователя, email и пароль
-    
+
     if (!this.model.email || this.model.email.length <= 0) {
       this.snackBar.open('Email не задан.',
         undefined, { duration: 5000, panelClass: ['background-red'] });

@@ -1,12 +1,15 @@
-import {map} from "rxjs/operators";
+import {map, withLatestFrom} from "rxjs/operators";
 import {Word} from "./word";
 import * as api from '../../../api';
 import {Injectable} from "@angular/core";
 import {EntityRepository} from "../interfaces/entity-repository";
+import {EntityDataSet} from "../interfaces/entity-dataset";
+import {Observable, OperatorFunction, pipe} from "rxjs";
 
 @Injectable()
-export class WordDataSet {
+export class WordDataSet extends EntityDataSet<Word> {
     constructor(private repository: EntityRepository<api.Word>) {
+        super();
     }
 
     entities = this.repository.entities
@@ -22,11 +25,11 @@ export class WordDataSet {
     }
 
     add(word: Word) {
-        return this.repository.add(this.toApi(word));
+        return this.repository.add(this.toApi(word)).pipe(this.toDomainOperator());
     }
 
     update(id: number, word: Word) {
-        return this.repository.update(id, this.toApi(word));
+        return this.repository.update(id, this.toApi(word)).pipe(this.toDomainOperator());
     }
 
     delete(id: number) {
@@ -39,5 +42,11 @@ export class WordDataSet {
 
     toDomain(word: api.Word, list: api.Word[]) {
         return Object.assign(<Word>{}, word, {synonyms: list.filter(x => word.synonyms.includes(x.id))});
+    }
+
+    toDomainOperator(): OperatorFunction<api.Word, Word> {
+        return pipe(
+            withLatestFrom<api.Word, Observable<api.Word[]>>(this.repository.entities),
+            map(([word, list]) => this.toDomain(word, list)));
     }
 }

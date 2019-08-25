@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { NotLoggedInGuard } from './core/not-logged-in-guard.service';
-import { AuthGuard } from './core/auth-guard.service';
+import { NotLoggedInGuard } from './core/auth/not-logged-in-guard.service';
+import { AuthGuard } from './core/auth/auth-guard.service';
 
 const routes: Routes = [
   { path: '', redirectTo: 'words', pathMatch: 'full' },

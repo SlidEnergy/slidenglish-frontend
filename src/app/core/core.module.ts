@@ -5,23 +5,24 @@ import {apiConfigFactory} from './api-config-factory';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {SharedModule} from '../shared/shared.module';
 import {DateInterceptor} from './date-interceptor';
-import {AuthService} from './auth.service';
-import {AuthGuard} from './auth-guard.service';
+import {AuthService} from './auth/auth.service';
+import {AuthGuard} from './auth/auth-guard.service';
 import {HeaderComponent} from './header/header.component';
 import {InitializationService} from './initialization.service';
 
 import {DomainModule} from "./domain/domain.module";
 import {StoreModule} from "./store/store.module";
+import {ApolloModule} from "apollo-angular";
+import {GraphQLModule} from "./graphql/graphql.module";
 
 @NgModule({
     imports: [
         HttpClientModule,
         SharedModule,
-
-        SharedModule,
         ApiModule.forRoot(apiConfigFactory),
         DomainModule,
-        StoreModule
+        //StoreModule,
+        GraphQLModule
     ],
     declarations: [
         HeaderComponent

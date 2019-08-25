@@ -3,10 +3,10 @@ import { throwError as observableThrowError, Observable, ReplaySubject } from 'r
 import { Injectable } from '@angular/core';
 
 import { catchError, map } from 'rxjs/operators';
-import { UsersService } from '../api/api/users.service';
+import { UsersService } from '../../api';
 
 import { MatSnackBar } from '@angular/material';
-import { User, TokenService, TokenInfo } from '../api';
+import { User, TokenService, TokenInfo } from '../../api';
 
 @Injectable()
 export class AuthService {
@@ -76,7 +76,7 @@ export class AuthService {
 						// Если произошла ошибка, то отправляем пользователя на страницу входа
 						this._currentUser.next(null);
 
-						this.snackBar.open(err.error.message,
+						this.snackBar.open(err.message,
 							undefined, { duration: 5000, panelClass: ['background-red'] });
 					}
 			}
@@ -114,7 +114,7 @@ export class AuthService {
 	private get() {
 		return this.usersService.getCurrentUser().pipe(
 			catchError(error => {
-				console.error(`Произошла ошибка. errorCode: ${error.code}, errorMessage: ${error.message}`);
+				console.error(`Произошла ошибка. errorCode: ${error.status}, errorMessage: ${error.message}`);
 				return observableThrowError(error);
 			}));
 	}

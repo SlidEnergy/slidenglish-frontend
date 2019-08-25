@@ -1,14 +1,16 @@
 import {Injectable} from '@angular/core';
 import {Word} from '../../api';
 import {EntityCollectionService, EntityCollectionServiceFactory} from "@ngrx/data";
+import {EntityRepository} from "../domain/interfaces/entity-repository";
 
 @Injectable({
     providedIn: 'root'
 })
-export class WordsNgrxRepository {
+export class WordsNgrxRepository extends EntityRepository<Word> {
     service: EntityCollectionService<Word>;
 
     constructor(factory: EntityCollectionServiceFactory) {
+        super();
         this.service = factory.create<Word>('Word');
     }
 

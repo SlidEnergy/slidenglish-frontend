@@ -2,13 +2,16 @@ import {NgModule, Optional, SkipSelf} from '@angular/core';
 import {WordDataSet} from "./words/word-dataset";
 import {DataContext} from "./data-context";
 import {EntityRepository} from "./interfaces/entity-repository";
-import {WordsNgrxRepository} from "../repositories/words-ngrx.repository";
+import {WordsNgrxRepository} from "../store/words-ngrx.repository";
+import {WordsGraphqlRepository} from "../graphql/words-graphql.repository";
+import {EntityDataSet} from "./interfaces/entity-dataset";
+import {WordGraphqlDataset} from "../graphql/word-graphql-dataset";
 
 @NgModule({
     providers: [
-        WordDataSet,
         DataContext,
-        [{ provide: EntityRepository, useClass: WordsNgrxRepository }]
+        [{ provide: EntityDataSet, useClass: WordGraphqlDataset }],
+        [{ provide: EntityRepository, useClass: WordsGraphqlRepository }]
     ]
 })
 export class DomainModule {

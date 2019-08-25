@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { ROUTER_NAVIGATION, RouterNavigationAction } from '@ngrx/router-store';
 
-import { AuthService } from '../auth.service';
+import { AuthService } from '../auth/auth.service';
 import * as coreActions from './core.store';
 import { RouterStateSnapshot } from '@angular/router';
 import { CoreState } from './core.store';
