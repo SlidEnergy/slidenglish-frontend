@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 
 import { TokenService } from './api/token.service';
+import { TranslateService } from './api/translate.service';
 import { UsersService } from './api/users.service';
 import { WordsService } from './api/words.service';
 
@@ -13,6 +14,7 @@ import { WordsService } from './api/words.service';
   exports:      [],
   providers: [
     TokenService,
+    TranslateService,
     UsersService,
     WordsService ]
 })

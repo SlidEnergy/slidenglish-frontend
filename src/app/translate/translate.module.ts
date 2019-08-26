@@ -1,12 +1,17 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { TranslatePageComponent } from './translate-page/translate-page.component';
+import {SharedModule} from "../shared/shared.module";
+import {RouterModule, Routes} from "@angular/router";
 
-
+const routes: Routes = [
+    {path: '', component: TranslatePageComponent},
+];
 
 @NgModule({
-  declarations: [],
+  declarations: [TranslatePageComponent],
   imports: [
-    CommonModule
+      SharedModule,
+      RouterModule.forChild(routes),
   ]
 })
 export class TranslateModule { }
