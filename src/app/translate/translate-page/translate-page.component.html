@@ -1,0 +1,10 @@
+<dx-text-area
+    #inputTextArea
+    [(value)]="text"
+    spellcheck="true"
+    valueChangeEvent="keyup">
+</dx-text-area>
+<dx-text-area
+    [readOnly]="true"
+    [value]="translatedText | async">
+</dx-text-area>

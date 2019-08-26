@@ -16,7 +16,6 @@ const routes: Routes = [
         WordListComponent,
     ],
     imports: [
-        CommonModule,
         SharedModule,
         RouterModule.forChild(routes),
     ],

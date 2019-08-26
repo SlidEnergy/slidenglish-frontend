@@ -13,6 +13,9 @@
          <a mat-button
             *ngIf="isLoggedIn | async"
             routerLink="/words">Слова</a>
+          <a mat-button
+             *ngIf="isLoggedIn | async"
+             routerLink="/translate">Перевод</a>
          <a mat-button
             *ngIf="!(isLoggedIn | async)"
             routerLink="/entry/register">Регистрация</a>
@@ -29,6 +32,9 @@
    <a mat-menu-item
       *ngIf="isLoggedIn | async"
       routerLink="/words">Слова</a>
+    <a mat-menu-item
+       *ngIf="isLoggedIn | async"
+       routerLink="/translate">Перевод</a>
    <a mat-menu-item
       *ngIf="!(isLoggedIn | async)"
       routerLink="/entry/register">Регистрация</a>

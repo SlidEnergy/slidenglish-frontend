@@ -9,7 +9,7 @@ import {
 } from '@angular/material';
 
 import { MatProgressButtonsModule } from 'mat-progress-buttons'
-import {DxDataGridModule, DxTagBoxModule} from 'devextreme-angular';
+import {DxDataGridModule, DxTagBoxModule, DxTextAreaModule} from 'devextreme-angular';
 
 @NgModule({
     imports: [
@@ -41,7 +41,8 @@ import {DxDataGridModule, DxTagBoxModule} from 'devextreme-angular';
         MatMenuModule,
 
         DxDataGridModule,
-        DxTagBoxModule
+        DxTagBoxModule,
+        DxTextAreaModule
     ]
 })
 export class SharedModule { }
