@@ -92,13 +92,6 @@ export class WordListComponent implements OnInit {
         e.component.expandRow(e.currentSelectedRowKeys[0]);
     }
 
-    getFilteredWords(word: Word) {
-        return query(this.words)
-            .filter(x => x.text !== word.text)
-            .sortBy("text", true)
-            .toArray();
-    }
-
     getFilteredWords2(options) {
         if (this.words && options.data)
             return this.words.filter(x => x.id !== options.data.id && (!options.data.synonyms || !options.data.synonyms.map(s => s.id).includes(x.id)));

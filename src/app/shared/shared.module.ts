@@ -10,6 +10,7 @@ import {
 
 import { MatProgressButtonsModule } from 'mat-progress-buttons'
 import {DxDataGridModule, DxTagBoxModule, DxTextAreaModule} from 'devextreme-angular';
+import { LogPipe } from './pipes/log.pipe';
 
 @NgModule({
     imports: [
@@ -42,7 +43,10 @@ import {DxDataGridModule, DxTagBoxModule, DxTextAreaModule} from 'devextreme-ang
 
         DxDataGridModule,
         DxTagBoxModule,
-        DxTextAreaModule
-    ]
+        DxTextAreaModule,
+
+        LogPipe
+    ],
+    declarations: [LogPipe]
 })
 export class SharedModule { }

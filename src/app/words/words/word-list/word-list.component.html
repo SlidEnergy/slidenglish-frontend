@@ -15,8 +15,8 @@
     </dxo-editing>
 
     <dxi-column dataField="text" caption="Word"></dxi-column>
-    <dxi-column dataField="association"></dxi-column>
-    <dxi-column dataField="description"></dxi-column>
+    <dxi-column dataField="association" [visible]="false"></dxi-column>
+    <dxi-column dataField="description" [visible]="false"></dxi-column>
     <dxi-column
         dataField="synonyms"
         [visible]="false">
@@ -35,13 +35,8 @@
     <dxo-selection mode="single"></dxo-selection>
 
     <div *dxTemplate="let row of 'detail'">
-        <dx-tag-box
-            [items]="getFilteredWords(row.data)"
-
-            displayExpr="text"
-            valueExpr="id"
-            [acceptCustomValue]="true"
-            (onCustomItemCreating)="tagBox_customItemCreating($event)">
-        </dx-tag-box>
+        <div *ngIf="row.data.synonyms">
+            <span class="synonym" *ngFor="let synonym of row.data.synonyms">{{synonym.text}}</span>
+        </div>
     </div>
 </dx-data-grid>
