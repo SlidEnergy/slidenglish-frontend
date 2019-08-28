@@ -10,3 +10,20 @@
     background-color: lightgray;
     padding: 2px 5px;
 }
+.word {
+    font-size: 14px;
+    font-weight: 700;
+}
+.association {
+    font-style: italic;
+
+    &:before {
+        content: '„';
+    }
+    &:after {
+        content: '”';
+    }
+}
+.description {
+    color: darkgray;
+}

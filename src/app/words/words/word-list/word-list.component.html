@@ -4,7 +4,8 @@
               (onRowRemoving)="grid_rowRemoving($event)"
               [masterDetail]="{ enabled: false, template: 'detail' }"
               (onSelectionChanged)="selectionChanged($event)"
-              keyExpr="id">
+              keyExpr="id"
+>
 
     <!--    (onRowClick)="grid_rowClick($event)"-->
     <dxo-editing
@@ -14,7 +15,7 @@
         [allowAdding]="true">
     </dxo-editing>
 
-    <dxi-column dataField="text" caption="Word"></dxi-column>
+    <dxi-column dataField="text" caption="Word" cellTemplate="cellTemplate" [sortIndex]="0" sortOrder="asc"></dxi-column>
     <dxi-column dataField="association" [visible]="false"></dxi-column>
     <dxi-column dataField="description" [visible]="false"></dxi-column>
     <dxi-column
@@ -38,5 +39,11 @@
         <div *ngIf="row.data.synonyms">
             <span class="synonym" *ngFor="let synonym of row.data.synonyms">{{synonym.text}}</span>
         </div>
+    </div>
+
+    <div *dxTemplate="let cell of 'cellTemplate'">
+                <div class="word">{{cell.data.text}}</div>
+                <div class="association" *ngIf="cell.data.association">{{cell.data.association}}</div>
+                <div class="description" *ngIf="cell.data.description">{{cell.data.description}}</div>
     </div>
 </dx-data-grid>
