@@ -11,7 +11,16 @@
  */
 
 
-export interface EditSynonymDto { 
+export interface ExampleOfUse { 
     id?: number;
-    text?: string;
+    example: string;
+    attribute?: ExampleOfUse.AttributeEnum;
+}
+export namespace ExampleOfUse {
+    export type AttributeEnum = 0 | 1 | 2;
+    export const AttributeEnum = {
+        NUMBER_0: 0 as AttributeEnum,
+        NUMBER_1: 1 as AttributeEnum,
+        NUMBER_2: 2 as AttributeEnum
+    };
 }

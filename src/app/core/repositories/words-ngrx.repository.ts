@@ -1,15 +1,15 @@
 import {Injectable} from '@angular/core';
-import {Word} from '../../api';
+import {LexicalUnit} from '../../api';
 import {EntityCollectionService, EntityCollectionServiceFactory} from "@ngrx/data";
 
 @Injectable({
     providedIn: 'root'
 })
 export class WordsNgrxRepository {
-    service: EntityCollectionService<Word>;
+    service: EntityCollectionService<LexicalUnit>;
 
     constructor(factory: EntityCollectionServiceFactory) {
-        this.service = factory.create<Word>('Word');
+        this.service = factory.create<LexicalUnit>('Word');
     }
 
     get entities() {
@@ -20,11 +20,11 @@ export class WordsNgrxRepository {
         return this.service.load();
     }
 
-    add(word: Word) {
+    add(word: LexicalUnit) {
         return this.service.add(word);
     }
 
-    update(id: number, word: Word) {
+    update(id: number, word: LexicalUnit) {
         return this.service.update(word);
     }
 
