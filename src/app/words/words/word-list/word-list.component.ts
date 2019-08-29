@@ -67,7 +67,7 @@ export class WordListComponent implements OnInit {
     }
 
     addNewSynonyms(entity: Word, newSynonyms) {
-        return Object.assign(entity, {synonyms: [...entity.synonyms.filter(x => x.id), ...newSynonyms]});
+        return Object.assign(entity, {synonyms: [...entity.relatedLexicalUnits.filter(x => x.id), ...newSynonyms]});
     }
 
     getResultEntity<T>(event) {
@@ -83,7 +83,7 @@ export class WordListComponent implements OnInit {
     }
 
     tagBox_customItemCreating = (event) => {
-        let newWord: api.Word = {text: event.text};
+        let newWord: api.LexicalUnit = {text: event.text};
         event.customItem = newWord;
     }
 

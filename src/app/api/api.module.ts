@@ -3,20 +3,20 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
+import { LexicalUnitsService } from './api/lexicalUnits.service';
 import { TokenService } from './api/token.service';
 import { TranslateService } from './api/translate.service';
 import { UsersService } from './api/users.service';
-import { WordsService } from './api/words.service';
 
 @NgModule({
   imports:      [],
   declarations: [],
   exports:      [],
   providers: [
+    LexicalUnitsService,
     TokenService,
     TranslateService,
-    UsersService,
-    WordsService ]
+    UsersService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {

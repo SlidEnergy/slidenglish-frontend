@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Word} from '../../api';
+import {LexicalUnit} from '../../api';
 import * as api from '../../api'
 import {AppState} from "../store/app-state";
 import {Store} from "@ngrx/store";
@@ -9,7 +9,7 @@ import {Store} from "@ngrx/store";
 })
 export class WordsRepository {
     constructor(
-        private service: api.WordsService,
+        private service: api.LexicalUnitsService,
         private store: Store<AppState>
     ) { }
 
@@ -19,11 +19,11 @@ export class WordsRepository {
         return this.service.getList();
     }
 
-    add(word: Word) {
+    add(word: LexicalUnit) {
         return this.service.add(word);
     }
 
-    update(id: number, word: Word) {
+    update(id: number, word: LexicalUnit) {
         return this.service.update(id, word);
     }
 

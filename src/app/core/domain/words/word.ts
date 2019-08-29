@@ -2,6 +2,6 @@ export class Word {
     id?: number;
     text: string;
     association: string;
-    description: string;
-    synonyms: Array<Word>;
+    notes: string;
+    relatedLexicalUnits: Array<Word>;
 }
