@@ -38,6 +38,6 @@ export class WordDataSet {
     }
 
     toDomain(word: api.LexicalUnit, list: api.LexicalUnit[]) {
-        return Object.assign({}, word, { relatedLexicalUnit: list.filter(x => word.relatedLexicalUnits.map(unit => unit.lexicalUnitId).includes(x.id))});
+        return Object.assign(<Word>{}, word, { relatedLexicalUnit: list.filter(x => word.relatedLexicalUnits.map(unit => unit.lexicalUnitId).includes(x.id))});
     }
 }
