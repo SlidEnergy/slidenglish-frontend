@@ -6,7 +6,7 @@ import {EntityRepository} from "../interfaces/entity-repository";
 
 @Injectable()
 export class WordDataSet {
-    constructor(private repository: EntityRepository<api.Word>) {
+    constructor(private repository: EntityRepository<api.LexicalUnit>) {
     }
 
     entities = this.repository.entities
@@ -34,10 +34,10 @@ export class WordDataSet {
     }
 
     toApi(word: Word) {
-        return Object.assign(<api.Word>{}, word, {synonyms: word.synonyms && word.synonyms.map(x => x.id)});
+        return Object.assign(<api.LexicalUnit>{}, word, {synonyms: word.relatedLexicalUnits && word.relatedLexicalUnits.map(x => x.id)});
     }
 
-    toDomain(word: api.Word, list: api.Word[]) {
-        return Object.assign(<Word>{}, word, {synonyms: list.filter(x => word.synonyms.includes(x.id))});
+    toDomain(word: api.LexicalUnit, list: api.LexicalUnit[]) {
+        return Object.assign(<Word>{}, word, { relatedLexicalUnit: list.filter(x => word.relatedLexicalUnits.map(unit => unit.lexicalUnitId).includes(x.id))});
     }
 }

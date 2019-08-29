@@ -18,14 +18,14 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
 
-import { Word } from '../model/word';
+import { LexicalUnit } from '../model/lexicalUnit';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
 @Injectable()
-export class WordsService {
+export class LexicalUnitsService {
 
     protected basePath = 'https://localhost';
     public defaultHeaders = new HttpHeaders();
@@ -99,7 +99,7 @@ export class WordsService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.delete<any>(`${this.basePath}/api/v1/Words/${encodeURIComponent(String(id))}`,
+        return this.httpClient.delete<any>(`${this.basePath}/api/v1/LexicalUnits/${encodeURIComponent(String(id))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -116,10 +116,10 @@ export class WordsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public add(word?: Word, observe?: 'body', reportProgress?: boolean): Observable<Word>;
-    public add(word?: Word, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Word>>;
-    public add(word?: Word, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Word>>;
-    public add(word?: Word, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public add(word?: LexicalUnit, observe?: 'body', reportProgress?: boolean): Observable<LexicalUnit>;
+    public add(word?: LexicalUnit, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LexicalUnit>>;
+    public add(word?: LexicalUnit, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LexicalUnit>>;
+    public add(word?: LexicalUnit, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
         let headers = this.defaultHeaders;
@@ -160,7 +160,7 @@ export class WordsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<Word>(`${this.basePath}/api/v1/Words`,
+        return this.httpClient.post<LexicalUnit>(`${this.basePath}/api/v1/LexicalUnits`,
             word,
             {
                 withCredentials: this.configuration.withCredentials,
@@ -177,9 +177,9 @@ export class WordsService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getList(observe?: 'body', reportProgress?: boolean): Observable<Array<Word>>;
-    public getList(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Word>>>;
-    public getList(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Word>>>;
+    public getList(observe?: 'body', reportProgress?: boolean): Observable<Array<LexicalUnit>>;
+    public getList(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<LexicalUnit>>>;
+    public getList(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<LexicalUnit>>>;
     public getList(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
@@ -212,7 +212,7 @@ export class WordsService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<Array<Word>>(`${this.basePath}/api/v1/Words`,
+        return this.httpClient.get<Array<LexicalUnit>>(`${this.basePath}/api/v1/LexicalUnits`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -226,14 +226,14 @@ export class WordsService {
      * 
      * 
      * @param id 
-     * @param word 
+     * @param lexicalUnit 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public update(id: number, word?: Word, observe?: 'body', reportProgress?: boolean): Observable<Word>;
-    public update(id: number, word?: Word, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Word>>;
-    public update(id: number, word?: Word, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Word>>;
-    public update(id: number, word?: Word, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public update(id: number, lexicalUnit?: LexicalUnit, observe?: 'body', reportProgress?: boolean): Observable<LexicalUnit>;
+    public update(id: number, lexicalUnit?: LexicalUnit, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LexicalUnit>>;
+    public update(id: number, lexicalUnit?: LexicalUnit, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LexicalUnit>>;
+    public update(id: number, lexicalUnit?: LexicalUnit, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling update.');
@@ -278,8 +278,8 @@ export class WordsService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.put<Word>(`${this.basePath}/api/v1/Words/${encodeURIComponent(String(id))}`,
-            word,
+        return this.httpClient.put<LexicalUnit>(`${this.basePath}/api/v1/LexicalUnits/${encodeURIComponent(String(id))}`,
+            lexicalUnit,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
