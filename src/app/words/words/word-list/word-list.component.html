@@ -1,10 +1,12 @@
-<dx-data-grid [dataSource]="words"
-              (onRowInserting)="grid_rowInserting($event)"
-              (onRowUpdating)="grid_rowUpdating($event)"
-              (onRowRemoving)="grid_rowRemoving($event)"
-              [masterDetail]="{ enabled: false, template: 'detail' }"
-              (onSelectionChanged)="selectionChanged($event)"
-              keyExpr="id">
+<dx-data-grid
+    [dataSource]="words"
+    (onRowInserting)="grid_rowInserting($event)"
+    (onRowUpdating)="grid_rowUpdating($event)"
+    (onRowRemoving)="grid_rowRemoving($event)"
+    [masterDetail]="{ enabled: false, template: 'detail' }"
+    (onSelectionChanged)="selectionChanged($event)"
+    allowColumnResizing
+    keyExpr="id">
 
     <!--    (onRowClick)="grid_rowClick($event)"-->
     <dxo-editing
@@ -14,7 +16,7 @@
         [allowAdding]="true">
     </dxo-editing>
 
-    <dxi-column dataField="text" caption="Word" cellTemplate="cellTemplate" [sortIndex]="0"
+    <dxi-column dataField="text" caption="Word" cellTemplate="wordCellTemplate" [sortIndex]="0"
                 sortOrder="asc"></dxi-column>
     <dxi-column dataField="association" [visible]="false"></dxi-column>
     <dxi-column dataField="notes" [visible]="false">
@@ -24,6 +26,7 @@
         <dxo-form-item [visible]="false"></dxo-form-item>
     </dxi-column>
     <dxi-column dataField="attributes" [allowEditing]="false"></dxi-column>
+    <dxi-column cellTemplate="linksTemplate"></dxi-column>
     <dxi-column
         dataField="synonyms"
         [visible]="false">
@@ -47,10 +50,28 @@
         </div>
     </div>
 
-    <div *dxTemplate="let cell of 'cellTemplate'">
+    <div *dxTemplate="let cell of 'wordCellTemplate'">
         <div class="word"><span>{{cell.data.text}}</span><span *ngIf="cell.data.usagesCount"
                                                                class="usages"> ({{cell.data.usagesCount}})</span></div>
         <div class="association" *ngIf="cell.data.association">{{cell.data.association}}</div>
         <div class="description" *ngIf="cell.data.notes">{{cell.data.notes}}</div>
+    </div>
+
+    <div *dxTemplate="let cell of 'linksTemplate'">
+        <a [href]="'https://puzzle-english.com/find?query=' + cell.data.text" target="_blank"><img
+            src="assets/img/puzzle-english.jpg" height="24" title="Puzzle english"/></a>,
+        <a [href]="'https://www.multitran.com/m.exe?l1=1&l2=2&s=' + cell.data.text" target="_blank"><img
+            src="assets/img/multitran.jpg" height="24" title="Мультитран"/></a>,
+        <a [href]="'https://www.merriam-webster.com/dictionary/' + cell.data.text" target="_blank"><img
+            src="assets/img/merriam-webster.jpg" height="24" title="Merridam-Webster"/></a>,
+        <a [href]="'https://www.vocabulary.com/dictionary/' + cell.data.text" target="_blank"><img
+            src="assets/img/vocabulary.png" height="24" title="Vocabulary"/></a>,
+        <a [href]="'https://dictionary.cambridge.org/us/dictionary/english/' + cell.data.text" target="_blank"><img
+            src="assets/img/cambridge.png" height="24" title="Cambridge"/></a>,
+        <a [href]="'https://translate.google.ru/?hl=ru&tab=wT#view=home&op=translate&sl=en&tl=ru&text=' + cell.data.text"
+           target="_blank"><img src="assets/img/google-translate.png" height="24" title="Google translate"/></a>,
+        <a [href]="'https://www.google.ru/search?q=' + cell.data.text" target="_blank">Search</a>/
+        <a [href]="'https://www.google.ru/search?tbm=isch&q=' + cell.data.text" target="_blank">Images</a>/
+        <a [href]="'https://www.google.ru/search?tbm=vid&q=' + cell.data.text" target="_blank">Video</a>
     </div>
 </dx-data-grid>
