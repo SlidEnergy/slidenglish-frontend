@@ -10,7 +10,9 @@
  * Do not edit the class manually.
  */
 import { ExampleOfUse } from './exampleOfUse';
+import { LexicalUnitInputAttribute } from './lexicalUnitInputAttribute';
 import { LexicalUnitRelation } from './lexicalUnitRelation';
+import { PartOfSpeech } from './partOfSpeech';
 
 
 export interface LexicalUnit { 
@@ -19,28 +21,10 @@ export interface LexicalUnit {
     association?: string;
     notes?: string;
     relatedLexicalUnits?: Array<LexicalUnitRelation>;
-    inputAttributes?: LexicalUnit.InputAttributesEnum;
+    inputAttributes?: LexicalUnitInputAttribute;
     usagesCount?: number;
-    partOfSpeech?: LexicalUnit.PartOfSpeechEnum;
+    partOfSpeech?: PartOfSpeech;
     examplesOfUse?: Array<ExampleOfUse>;
     isWord?: boolean;
     isPhrase?: boolean;
-}
-export namespace LexicalUnit {
-    export type InputAttributesEnum = 0 | 1 | 2;
-    export const InputAttributesEnum = {
-        NUMBER_0: 0 as InputAttributesEnum,
-        NUMBER_1: 1 as InputAttributesEnum,
-        NUMBER_2: 2 as InputAttributesEnum
-    };
-    export type PartOfSpeechEnum = 0 | 1 | 2 | 3 | 4 | 5 | 6;
-    export const PartOfSpeechEnum = {
-        NUMBER_0: 0 as PartOfSpeechEnum,
-        NUMBER_1: 1 as PartOfSpeechEnum,
-        NUMBER_2: 2 as PartOfSpeechEnum,
-        NUMBER_3: 3 as PartOfSpeechEnum,
-        NUMBER_4: 4 as PartOfSpeechEnum,
-        NUMBER_5: 5 as PartOfSpeechEnum,
-        NUMBER_6: 6 as PartOfSpeechEnum
-    };
 }

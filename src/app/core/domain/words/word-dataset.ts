@@ -34,7 +34,7 @@ export class WordDataSet {
     }
 
     toApi(word: Word) {
-        return Object.assign(<api.LexicalUnit>{}, word, {synonyms: word.relatedLexicalUnits && word.relatedLexicalUnits.map(x => x.id)});
+        return Object.assign(<api.LexicalUnit>{}, word, {synonyms: word.relatedLexicalUnits && word.relatedLexicalUnits.map(x => x.lexicalUnitId)});
     }
 
     toDomain(word: api.LexicalUnit, list: api.LexicalUnit[]) {

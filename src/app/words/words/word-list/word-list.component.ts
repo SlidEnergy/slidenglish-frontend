@@ -67,15 +67,19 @@ export class WordListComponent implements OnInit {
     }
 
     addNewSynonyms(entity: Word, newSynonyms) {
-        return Object.assign(entity, {synonyms: [...entity.relatedLexicalUnits.filter(x => x.id), ...newSynonyms]});
+        return Object.assign(entity, {synonyms: [...entity.relatedLexicalUnits.filter(x => x.lexicalUnitId), ...newSynonyms]});
     }
 
-    getResultEntity<T>(event) {
-        return Object.assign(<T>{}, event.oldData, event.newData);
+    private getResultEntity<T>(event) {
+        return this.toEntity(Object.assign(<T>{}, event.oldData, event.newData));
+    }
+
+    private toEntity(entity: any) {
+        return { ...entity, examplesOfUse: entity.examplesOfUse && entity.examplesOfUse.split('\n').map(x=> ({ example: x }))};
     }
 
     grid_rowInserting(event) {
-        this.wordsService.add(event.data)
+        this.wordsService.add(this.toEntity(event.data))
             .subscribe(
                 value => showSuccess('Слово добавлено'),
                 error => showError('Не удалось добавить слово')
@@ -86,6 +90,16 @@ export class WordListComponent implements OnInit {
         let newWord: api.LexicalUnit = {text: event.text};
         event.customItem = newWord;
     }
+
+    calculateExamplesOfUse = (rowData: Word | { examplesOfUse: string }) => {
+        if(!rowData.examplesOfUse)
+            return '';
+
+        if(typeof rowData.examplesOfUse === 'string')
+            return rowData.examplesOfUse;
+
+        return rowData.examplesOfUse.map(x=>x.example).reduce((acc, value) => acc == '' ? value : acc + '\n' + value, '');
+    };
 
     selectionChanged(e) {
         e.component.collapseAll(-1);

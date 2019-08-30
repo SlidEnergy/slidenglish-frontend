@@ -9,11 +9,12 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { ExampleOfUseAttribute } from './exampleOfUseAttribute';
 
 
-export interface ExampleOfUse { 
-    id?: number;
-    example: string;
-    attribute?: ExampleOfUseAttribute;
-}
+export type RelationAttribute = 'None' | 'Synonym' | 'RootWord';
+
+export const RelationAttribute = {
+    None: 'None' as RelationAttribute,
+    Synonym: 'Synonym' as RelationAttribute,
+    RootWord: 'RootWord' as RelationAttribute
+};

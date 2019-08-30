@@ -9,11 +9,12 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { ExampleOfUseAttribute } from './exampleOfUseAttribute';
 
 
-export interface ExampleOfUse { 
-    id?: number;
-    example: string;
-    attribute?: ExampleOfUseAttribute;
-}
+export type LexicalUnitInputAttribute = 'None' | 'UserInput' | 'TranslateInput';
+
+export const LexicalUnitInputAttribute = {
+    None: 'None' as LexicalUnitInputAttribute,
+    UserInput: 'UserInput' as LexicalUnitInputAttribute,
+    TranslateInput: 'TranslateInput' as LexicalUnitInputAttribute
+};

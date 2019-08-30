@@ -9,11 +9,12 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { ExampleOfUseAttribute } from './exampleOfUseAttribute';
 
 
-export interface ExampleOfUse { 
-    id?: number;
-    example: string;
-    attribute?: ExampleOfUseAttribute;
-}
+export type ExampleOfUseAttribute = 'None' | 'ExternalExample' | 'UserExample';
+
+export const ExampleOfUseAttribute = {
+    None: 'None' as ExampleOfUseAttribute,
+    ExternalExample: 'ExternalExample' as ExampleOfUseAttribute,
+    UserExample: 'UserExample' as ExampleOfUseAttribute
+};
