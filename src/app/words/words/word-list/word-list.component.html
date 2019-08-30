@@ -19,27 +19,30 @@
     <dxi-column dataField="text" caption="Word" cellTemplate="wordCellTemplate" [sortIndex]="0"
                 sortOrder="asc"></dxi-column>
     <dxi-column dataField="association" [visible]="false"></dxi-column>
-    <dxi-column dataField="notes" [visible]="false">
-        <dxo-form-item editorType="dxTextArea"></dxo-form-item>
-    </dxi-column>
     <dxi-column dataField="usagesCount" [allowEditing]="false" [visible]="false">
         <dxo-form-item [visible]="false"></dxo-form-item>
     </dxi-column>
     <dxi-column dataField="attributes" [allowEditing]="false"></dxi-column>
+    <dxi-column dataField="examplesOfUse" [calculateCellValue]="calculateExamplesOfUse" cellTemplate="exampleOfUseCellTemplate">
+        <dxo-form-item
+            editorType="dxTextArea">
+        </dxo-form-item>
+    </dxi-column>
     <dxi-column cellTemplate="linksTemplate"></dxi-column>
     <dxi-column
         dataField="synonyms"
         [visible]="false">
         <dxo-lookup
             [dataSource]="getFilteredWords2"
-
             displayExpr="text">
         </dxo-lookup>
         <dxo-form-item
-            [colSpan]="2"
             editorType="dxTagBox"
             [editorOptions]="{ acceptCustomValue: true, onCustomItemCreating: tagBox_customItemCreating}">
         </dxo-form-item>
+    </dxi-column>
+    <dxi-column dataField="notes" [visible]="false">
+        <dxo-form-item editorType="dxTextArea" [colSpan]="2"></dxo-form-item>
     </dxi-column>
 
     <dxo-selection mode="single"></dxo-selection>
@@ -55,6 +58,10 @@
                                                                class="usages"> ({{cell.data.usagesCount}})</span></div>
         <div class="association" *ngIf="cell.data.association">{{cell.data.association}}</div>
         <div class="description" *ngIf="cell.data.notes">{{cell.data.notes}}</div>
+    </div>
+
+    <div *dxTemplate="let cell of 'exampleOfUseCellTemplate'">
+        <div class="examples-of-use">{{cell.value}}</div>
     </div>
 
     <div *dxTemplate="let cell of 'linksTemplate'">

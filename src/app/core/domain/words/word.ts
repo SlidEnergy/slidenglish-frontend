@@ -1,7 +1,6 @@
-export class Word {
-    id?: number;
-    text: string;
-    association?: string;
-    notes?: string;
-    relatedLexicalUnits?: Array<Word>;
+import * as api from '../../../api';
+import {RelationAttribute} from "../../../api";
+
+export type Word = api.LexicalUnit & {
+    relatedLexicalUnits?: { word: Word, attribute: RelationAttribute }[];
 }

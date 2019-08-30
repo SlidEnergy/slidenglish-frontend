@@ -9,17 +9,10 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { RelationAttribute } from './relationAttribute';
 
 
 export interface LexicalUnitRelation { 
     lexicalUnitId?: number;
-    attribute?: LexicalUnitRelation.AttributeEnum;
-}
-export namespace LexicalUnitRelation {
-    export type AttributeEnum = 0 | 1 | 2;
-    export const AttributeEnum = {
-        NUMBER_0: 0 as AttributeEnum,
-        NUMBER_1: 1 as AttributeEnum,
-        NUMBER_2: 2 as AttributeEnum
-    };
+    attribute?: RelationAttribute;
 }
