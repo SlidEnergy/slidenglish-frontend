@@ -75,7 +75,10 @@ export class WordListComponent implements OnInit {
     }
 
     private toEntity(entity: any) {
-        return { ...entity, examplesOfUse: entity.examplesOfUse && entity.examplesOfUse.split('\n').map(x=> ({ example: x }))};
+        if(typeof entity.examplesOfUse === 'string')
+            return { ...entity, examplesOfUse: entity.examplesOfUse && entity.examplesOfUse.split('\n').map(x=> ({ example: x }))};
+        else
+            return entity;
     }
 
     grid_rowInserting(event) {
