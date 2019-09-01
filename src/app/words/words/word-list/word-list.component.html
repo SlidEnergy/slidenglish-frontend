@@ -5,7 +5,7 @@
     (onRowRemoving)="grid_rowRemoving($event)"
     [masterDetail]="{ enabled: false, template: 'detail' }"
     (onSelectionChanged)="selectionChanged($event)"
-    allowColumnResizing
+    [allowColumnResizing]="true"
     keyExpr="id">
 
     <!--    (onRowClick)="grid_rowClick($event)"-->
