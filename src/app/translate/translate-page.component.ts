@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {TranslateService} from "../../api";
+import {TranslateService} from "../api";
 import {Observable} from "rxjs";
 import {debounceTime, distinctUntilChanged, map, switchMap, tap} from "rxjs/operators";
 import {DxTextAreaComponent} from "devextreme-angular";
