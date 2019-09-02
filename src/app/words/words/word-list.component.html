@@ -19,22 +19,24 @@
     <dxi-column dataField="text" caption="Word" cellTemplate="wordCellTemplate" [sortIndex]="0"
                 sortOrder="asc"></dxi-column>
     <dxi-column dataField="association" [visible]="false"></dxi-column>
-    <dxi-column dataField="usagesCount" [allowEditing]="false" [visible]="false">
-        <dxo-form-item [visible]="false"></dxo-form-item>
-    </dxi-column>
-    <dxi-column dataField="attributes" [allowEditing]="false"></dxi-column>
+    <dxi-column dataField="inputAttributes"></dxi-column>
     <dxi-column dataField="examplesOfUse" [calculateCellValue]="calculateExamplesOfUse" cellTemplate="exampleOfUseCellTemplate">
         <dxo-form-item
             editorType="dxTextArea">
         </dxo-form-item>
     </dxi-column>
-    <dxi-column cellTemplate="linksTemplate"></dxi-column>
+    <dxi-column cellTemplate="linksTemplate">
+        <dxo-form-item
+            [visible]="false">
+        </dxo-form-item>
+    </dxi-column>
     <dxi-column
-        dataField="synonyms"
-        [visible]="false">
+        dataField="relatedLexicalUnits"
+        [visible]="false"
+        [calculateCellValue]="calculateRelatedLexicalUnits">
         <dxo-lookup
-            [dataSource]="getFilteredWords2"
-            displayExpr="text">
+            [dataSource]="getFilteredWords"
+            [displayExpr]="displayRelatedLexicalUnit">
         </dxo-lookup>
         <dxo-form-item
             editorType="dxTagBox"

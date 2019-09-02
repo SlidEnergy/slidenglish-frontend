@@ -8,6 +8,7 @@ import {Word} from "../../core/domain/words/word";
 import {WordsService} from "../words.service";
 import {exhaustMap, filter, map, switchMap, tap} from "rxjs/operators";
 import {showError, showSuccess} from "../../shared/utils/message-utils";
+import {RelationAttribute} from "src/app/api";
 
 @Component({
     selector: 'app-word-list',
@@ -22,7 +23,7 @@ export class WordListComponent implements OnInit {
         private router: Router,
         private wordsService: WordsService
     ) {
-        this.getFilteredWords2 = this.getFilteredWords2.bind(this);
+        this.getFilteredWords = this.getFilteredWords.bind(this);
     }
 
     ngOnInit() {
@@ -101,15 +102,37 @@ export class WordListComponent implements OnInit {
         return rowData.examplesOfUse.map(x=>x.example).reduce((acc, value) => acc == '' ? value : acc + '\n' + value, '');
     };
 
+    calculateRelatedLexicalUnits = (rowData: Word) => {
+        return rowData.relatedLexicalUnits;
+    };
+
     selectionChanged(e) {
         e.component.collapseAll(-1);
         e.component.expandRow(e.currentSelectedRowKeys[0]);
     }
 
-    getFilteredWords2(options) {
-        if (this.words && options.data)
-            return this.words.filter(x => x.id !== options.data.id && (!options.data.synonyms || !options.data.synonyms.map(s => s.id).includes(x.id)));
+    getFilteredWords(options) {
+        if (this.words && options.data) {
+            let words = this.words
+                .filter(x =>
+                    x.id !== options.data.id &&
+                    (!options.data.relatedLexicalUnits || !options.data.relatedLexicalUnits.map(s => s.id).includes(x.id)));
+
+            let dataSource = [];
+            for(let attribute of Object.keys(RelationAttribute)) {
+                dataSource.push(...words.map(x=> ({ word: x, attribute})));
+            }
+
+            return dataSource;
+        }
         else
             return [];
+    }
+
+    displayRelatedLexicalUnit = (item) => {
+        if(item.attribute == RelationAttribute.None)
+            return item.word.text;
+
+        return item.word.text + ' (' + item.attribute + ')';
     }
 }
