@@ -29,32 +29,32 @@ export class WordListComponent implements OnInit {
     ngOnInit() {
     }
 
-    grid_rowClick(event) {
+    grid_rowClick(event: { data: Word }) {
         this.router.navigate(['words', event.data.id]);
     }
 
-    grid_rowRemoving(event) {
+    grid_rowRemoving(event: { data: Word }) {
         this.wordsService.delete(event.data.id).subscribe(
             value => showSuccess('Слово удалено'),
             error => showError('Не удалось удалить слово'));
     }
 
     grid_rowUpdating(event) {
-        let hasNewSynonyms = event.newData.synonyms && event.newData.synonyms.filter(x => x.id === undefined).length > 0;
+        let hasNewRelatedLexicalUnits = event.newData.relatedLexicalUnits && event.newData.relatedLexicalUnits.filter(x => x.word.id === undefined).length > 0;
 
         // Поток создания новых синонимов
-        let createNewSynonyms = of(filter(() => hasNewSynonyms))
+        let createRelatedLexicalUnits = of(filter(() => hasNewRelatedLexicalUnits))
             .pipe(
                 // Дожидаемся создания всех слов на сервере
-                exhaustMap(value => forkJoin(event.newData.synonyms.filter(x => x.id === undefined).map(x => this.wordsService.add((x))))),
+                exhaustMap(value => forkJoin(event.newData.relatedLexicalUnits.filter(x => x.word.id === undefined).map(x => this.wordsService.add((x.word))))),
                 // Добавляем новые слова в коллекцию
                 tap((newSynonyms: Word[]) => newSynonyms.forEach(x => this.words.push(x)))
             );
 
         // Если нужно создавать синонимы, создаем их, иначе переходим к обновлению сущности
-        iif(() => hasNewSynonyms,
+        iif(() => hasNewRelatedLexicalUnits,
             // then
-            createNewSynonyms.pipe(map((newSynonyms: Word[]) => this.addNewSynonyms(this.getResultEntity(event), newSynonyms))),
+            createRelatedLexicalUnits.pipe(map((newRelatedLexicalUnits: Word[]) => this.addNewRelatedLexicalUnit(this.toEntity(this.getResultEntity(event)), newRelatedLexicalUnits))),
             // else
             of(this.getResultEntity(event))
         )
@@ -67,12 +67,12 @@ export class WordListComponent implements OnInit {
             );
     }
 
-    addNewSynonyms(entity: Word, newSynonyms) {
-        return Object.assign(entity, {synonyms: [...entity.relatedLexicalUnits.filter(x => x.lexicalUnitId), ...newSynonyms]});
+    addNewRelatedLexicalUnit(entity: Word, newRelatedLexicalUnits) {
+        return Object.assign(entity, {relatedLexicalUnits: [...entity.relatedLexicalUnits.filter(x => x.word.id), ...newRelatedLexicalUnits]});
     }
 
     private getResultEntity<T>(event) {
-        return this.toEntity(Object.assign(<T>{}, event.oldData, event.newData));
+        return Object.assign(<T>{}, event.oldData, event.newData);
     }
 
     private toEntity(entity: any) {
@@ -119,8 +119,8 @@ export class WordListComponent implements OnInit {
                     (!options.data.relatedLexicalUnits || !options.data.relatedLexicalUnits.map(s => s.id).includes(x.id)));
 
             let dataSource = [];
-            for(let attribute of Object.keys(RelationAttribute)) {
-                dataSource.push(...words.map(x=> ({ word: x, attribute})));
+            for(let word of words) {
+                dataSource.push(...Object.keys(RelationAttribute).map(x=> ({ word, attribute: x})));
             }
 
             return dataSource;
@@ -130,6 +130,9 @@ export class WordListComponent implements OnInit {
     }
 
     displayRelatedLexicalUnit = (item) => {
+        if(!item)
+            return '';
+
         if(item.attribute == RelationAttribute.None)
             return item.word.text;
 
