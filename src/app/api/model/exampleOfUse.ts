@@ -13,7 +13,6 @@ import { ExampleOfUseAttribute } from './exampleOfUseAttribute';
 
 
 export interface ExampleOfUse { 
-    id?: number;
     example: string;
     attribute?: ExampleOfUseAttribute;
 }

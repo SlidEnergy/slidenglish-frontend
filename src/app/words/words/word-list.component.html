@@ -6,7 +6,8 @@
     [masterDetail]="{ enabled: false, template: 'detail' }"
     (onSelectionChanged)="selectionChanged($event)"
     [allowColumnResizing]="true"
-    keyExpr="id">
+    keyExpr="id"
+    [columnAutoWidth]="true">
 
     <!--    (onRowClick)="grid_rowClick($event)"-->
     <dxo-editing
@@ -19,7 +20,9 @@
     <dxi-column dataField="text" caption="Word" cellTemplate="wordCellTemplate" [sortIndex]="0"
                 sortOrder="asc"></dxi-column>
     <dxi-column dataField="association" [visible]="false"></dxi-column>
-    <dxi-column dataField="inputAttributes"></dxi-column>
+    <dxi-column dataField="inputAttributes">
+        <dxo-form-item [visible]="false"></dxo-form-item>
+    </dxi-column>
     <dxi-column dataField="examplesOfUse" [calculateCellValue]="calculateExamplesOfUse" cellTemplate="exampleOfUseCellTemplate">
         <dxo-form-item
             editorType="dxTextArea">
@@ -31,9 +34,9 @@
         </dxo-form-item>
     </dxi-column>
     <dxi-column
+        caption="Related words:"
         dataField="relatedLexicalUnits"
-        [visible]="false"
-        [calculateCellValue]="calculateRelatedLexicalUnits">
+        [visible]="false">
         <dxo-lookup
             [dataSource]="getFilteredWords"
             [displayExpr]="displayRelatedLexicalUnit">
@@ -50,8 +53,8 @@
     <dxo-selection mode="single"></dxo-selection>
 
     <div *dxTemplate="let row of 'detail'">
-        <div *ngIf="row.data.synonyms">
-            <span class="synonym" *ngFor="let synonym of row.data.synonyms">{{synonym.text}}</span>
+        <div *ngIf="row.data.relatedLexicalUnits">
+            <span class="synonym" *ngFor="let synonym of row.data.relatedLexicalUnits">{{synonym.text}}</span>
         </div>
     </div>
 

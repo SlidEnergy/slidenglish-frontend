@@ -1,12 +1,10 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import * as api from 'src/app/api';
 import {forkJoin, iif, of} from 'rxjs';
 import {Router} from '@angular/router';
 
-import query from "devextreme/data/query";
 import {Word} from "../../core/domain/words/word";
 import {WordsService} from "../words.service";
-import {exhaustMap, filter, map, switchMap, tap} from "rxjs/operators";
+import {map, switchMap, tap} from "rxjs/operators";
 import {showError, showSuccess} from "../../shared/utils/message-utils";
 import {RelationAttribute} from "src/app/api";
 
@@ -42,11 +40,13 @@ export class WordListComponent implements OnInit {
     grid_rowUpdating(event) {
         let hasNewRelatedLexicalUnits = event.newData.relatedLexicalUnits && event.newData.relatedLexicalUnits.filter(x => x.word.id === undefined).length > 0;
 
+        let relationsToAdd = event.newData.relatedLexicalUnits.filter(x => x.word.id === undefined);
+
         // Поток создания новых синонимов
-        let createRelatedLexicalUnits = of(filter(() => hasNewRelatedLexicalUnits))
-            .pipe(
-                // Дожидаемся создания всех слов на сервере
-                exhaustMap(value => forkJoin(event.newData.relatedLexicalUnits.filter(x => x.word.id === undefined).map(x => this.wordsService.add((x.word))))),
+        let createLexicalUnitRelations = forkJoin(
+            relationsToAdd
+                .map(x => this.wordsService.add(x.word).pipe(map(newWord => ({ word: newWord, attribute: x.attribute})))))
+        .pipe(
                 // Добавляем новые слова в коллекцию
                 tap((newSynonyms: Word[]) => newSynonyms.forEach(x => this.words.push(x)))
             );
@@ -54,7 +54,7 @@ export class WordListComponent implements OnInit {
         // Если нужно создавать синонимы, создаем их, иначе переходим к обновлению сущности
         iif(() => hasNewRelatedLexicalUnits,
             // then
-            createRelatedLexicalUnits.pipe(map((newRelatedLexicalUnits: Word[]) => this.addNewRelatedLexicalUnit(this.toEntity(this.getResultEntity(event)), newRelatedLexicalUnits))),
+            createLexicalUnitRelations.pipe(map((newRelatedLexicalUnits: Word[]) => this.addNewRelatedLexicalUnit(this.getResultEntity(event), newRelatedLexicalUnits))),
             // else
             of(this.getResultEntity(event))
         )
@@ -72,11 +72,14 @@ export class WordListComponent implements OnInit {
     }
 
     private getResultEntity<T>(event) {
-        return Object.assign(<T>{}, event.oldData, event.newData);
+        return this.toEntity(Object.assign(<T>{}, event.oldData, event.newData));
     }
 
     private toEntity(entity: any) {
-        return { ...entity, examplesOfUse: entity.examplesOfUse && entity.examplesOfUse.split('\n').map(x=> ({ example: x }))};
+        if(!entity.examplesOfUse || Array.isArray(entity.examplesOfUse))
+            return entity;
+
+        return { ...entity, examplesOfUse: entity.examplesOfUse.split('\n').map(x=> ({ example: x }))};
     }
 
     grid_rowInserting(event) {
@@ -88,9 +91,8 @@ export class WordListComponent implements OnInit {
     }
 
     tagBox_customItemCreating = (event) => {
-        let newWord: api.LexicalUnit = {text: event.text};
-        event.customItem = newWord;
-    }
+        event.customItem = { word: { text: event.text }, attribute: RelationAttribute.None };
+    };
 
     calculateExamplesOfUse = (rowData: Word | { examplesOfUse: string }) => {
         if(!rowData.examplesOfUse)
@@ -102,13 +104,9 @@ export class WordListComponent implements OnInit {
         return rowData.examplesOfUse.map(x=>x.example).reduce((acc, value) => acc == '' ? value : acc + '\n' + value, '');
     };
 
-    calculateRelatedLexicalUnits = (rowData: Word) => {
-        return rowData.relatedLexicalUnits;
-    };
-
     selectionChanged(e) {
-        e.component.collapseAll(-1);
-        e.component.expandRow(e.currentSelectedRowKeys[0]);
+        // e.component.collapseAll(-1);
+        // e.component.expandRow(e.currentSelectedRowKeys[0]);
     }
 
     getFilteredWords(options) {
