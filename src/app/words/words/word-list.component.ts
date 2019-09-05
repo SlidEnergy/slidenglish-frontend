@@ -1,13 +1,12 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import * as api from 'src/app/api';
 import {forkJoin, iif, of} from 'rxjs';
 import {Router} from '@angular/router';
 
-import query from "devextreme/data/query";
-import {Word} from "../../../core/domain/words/word";
-import {WordsService} from "../../words.service";
-import {exhaustMap, filter, map, switchMap, tap} from "rxjs/operators";
-import {showError, showSuccess} from "../../../shared/utils/message-utils";
+import {Word} from "../../core/domain/words/word";
+import {WordsService} from "../words.service";
+import {map, switchMap, tap} from "rxjs/operators";
+import {showError, showSuccess} from "../../shared/utils/message-utils";
+import {RelationAttribute} from "src/app/api";
 
 @Component({
     selector: 'app-word-list',
@@ -22,38 +21,40 @@ export class WordListComponent implements OnInit {
         private router: Router,
         private wordsService: WordsService
     ) {
-        this.getFilteredWords2 = this.getFilteredWords2.bind(this);
+        this.getFilteredWords = this.getFilteredWords.bind(this);
     }
 
     ngOnInit() {
     }
 
-    grid_rowClick(event) {
+    grid_rowClick(event: { data: Word }) {
         this.router.navigate(['words', event.data.id]);
     }
 
-    grid_rowRemoving(event) {
+    grid_rowRemoving(event: { data: Word }) {
         this.wordsService.delete(event.data.id).subscribe(
             value => showSuccess('Слово удалено'),
             error => showError('Не удалось удалить слово'));
     }
 
     grid_rowUpdating(event) {
-        let hasNewSynonyms = event.newData.synonyms && event.newData.synonyms.filter(x => x.id === undefined).length > 0;
+        let hasNewRelatedLexicalUnits = event.newData.relatedLexicalUnits && event.newData.relatedLexicalUnits.filter(x => x.word.id === undefined).length > 0;
+
+        let relationsToAdd = event.newData.relatedLexicalUnits.filter(x => x.word.id === undefined);
 
         // Поток создания новых синонимов
-        let createNewSynonyms = of(filter(() => hasNewSynonyms))
-            .pipe(
-                // Дожидаемся создания всех слов на сервере
-                exhaustMap(value => forkJoin(event.newData.synonyms.filter(x => x.id === undefined).map(x => this.wordsService.add((x))))),
+        let createLexicalUnitRelations = forkJoin(
+            relationsToAdd
+                .map(x => this.wordsService.add(x.word).pipe(map(newWord => ({ word: newWord, attribute: x.attribute})))))
+        .pipe(
                 // Добавляем новые слова в коллекцию
                 tap((newSynonyms: Word[]) => newSynonyms.forEach(x => this.words.push(x)))
             );
 
         // Если нужно создавать синонимы, создаем их, иначе переходим к обновлению сущности
-        iif(() => hasNewSynonyms,
+        iif(() => hasNewRelatedLexicalUnits,
             // then
-            createNewSynonyms.pipe(map((newSynonyms: Word[]) => this.addNewSynonyms(this.getResultEntity(event), newSynonyms))),
+            createLexicalUnitRelations.pipe(map((newRelatedLexicalUnits: Word[]) => this.addNewRelatedLexicalUnit(this.getResultEntity(event), newRelatedLexicalUnits))),
             // else
             of(this.getResultEntity(event))
         )
@@ -66,8 +67,8 @@ export class WordListComponent implements OnInit {
             );
     }
 
-    addNewSynonyms(entity: Word, newSynonyms) {
-        return Object.assign(entity, {synonyms: [...entity.relatedLexicalUnits.filter(x => x.lexicalUnitId), ...newSynonyms]});
+    addNewRelatedLexicalUnit(entity: Word, newRelatedLexicalUnits) {
+        return Object.assign(entity, {relatedLexicalUnits: [...entity.relatedLexicalUnits.filter(x => x.word.id), ...newRelatedLexicalUnits]});
     }
 
     private getResultEntity<T>(event) {
@@ -75,10 +76,10 @@ export class WordListComponent implements OnInit {
     }
 
     private toEntity(entity: any) {
-        if(typeof entity.examplesOfUse === 'string')
-            return { ...entity, examplesOfUse: entity.examplesOfUse && entity.examplesOfUse.split('\n').map(x=> ({ example: x }))};
-        else
+        if(!entity.examplesOfUse || Array.isArray(entity.examplesOfUse))
             return entity;
+
+        return { ...entity, examplesOfUse: entity.examplesOfUse.split('\n').map(x=> ({ example: x }))};
     }
 
     grid_rowInserting(event) {
@@ -90,9 +91,8 @@ export class WordListComponent implements OnInit {
     }
 
     tagBox_customItemCreating = (event) => {
-        let newWord: api.LexicalUnit = {text: event.text};
-        event.customItem = newWord;
-    }
+        event.customItem = { word: { text: event.text }, attribute: RelationAttribute.None };
+    };
 
     calculateExamplesOfUse = (rowData: Word | { examplesOfUse: string }) => {
         if(!rowData.examplesOfUse)
@@ -105,14 +105,35 @@ export class WordListComponent implements OnInit {
     };
 
     selectionChanged(e) {
-        e.component.collapseAll(-1);
-        e.component.expandRow(e.currentSelectedRowKeys[0]);
+        // e.component.collapseAll(-1);
+        // e.component.expandRow(e.currentSelectedRowKeys[0]);
     }
 
-    getFilteredWords2(options) {
-        if (this.words && options.data)
-            return this.words.filter(x => x.id !== options.data.id && (!options.data.synonyms || !options.data.synonyms.map(s => s.id).includes(x.id)));
+    getFilteredWords(options) {
+        if (this.words && options.data) {
+            let words = this.words
+                .filter(x =>
+                    x.id !== options.data.id &&
+                    (!options.data.relatedLexicalUnits || !options.data.relatedLexicalUnits.map(s => s.id).includes(x.id)));
+
+            let dataSource = [];
+            for(let word of words) {
+                dataSource.push(...Object.keys(RelationAttribute).map(x=> ({ word, attribute: x})));
+            }
+
+            return dataSource;
+        }
         else
             return [];
+    }
+
+    displayRelatedLexicalUnit = (item) => {
+        if(!item)
+            return '';
+
+        if(item.attribute == RelationAttribute.None)
+            return item.word.text;
+
+        return item.word.text + ' (' + item.attribute + ')';
     }
 }

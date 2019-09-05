@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { TranslatePageComponent } from './translate-page/translate-page.component';
+import { TranslatePageComponent } from './translate-page.component';
 import {SharedModule} from "../shared/shared.module";
 import {RouterModule, Routes} from "@angular/router";
 

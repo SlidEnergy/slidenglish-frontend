@@ -1,9 +1,8 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {SharedModule} from '../shared/shared.module';
 import {Routes, RouterModule} from '@angular/router';
-import {WordsPageComponent} from './words/words-page/words-page.component';
-import {WordListComponent} from './words/word-list/word-list.component';
+import {WordsPageComponent} from './words/words-page.component';
+import {WordListComponent} from './words/word-list.component';
 import {WordsService} from "./words.service";
 
 const routes: Routes = [

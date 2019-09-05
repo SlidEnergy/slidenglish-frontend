@@ -6,7 +6,8 @@
     [masterDetail]="{ enabled: false, template: 'detail' }"
     (onSelectionChanged)="selectionChanged($event)"
     [allowColumnResizing]="true"
-    keyExpr="id">
+    keyExpr="id"
+    [columnAutoWidth]="true">
 
     <!--    (onRowClick)="grid_rowClick($event)"-->
     <dxo-editing
@@ -19,22 +20,26 @@
     <dxi-column dataField="text" caption="Word" cellTemplate="wordCellTemplate" [sortIndex]="0"
                 sortOrder="asc"></dxi-column>
     <dxi-column dataField="association" [visible]="false"></dxi-column>
-    <dxi-column dataField="usagesCount" [allowEditing]="false" [visible]="false">
+    <dxi-column dataField="inputAttributes">
         <dxo-form-item [visible]="false"></dxo-form-item>
     </dxi-column>
-    <dxi-column dataField="attributes" [allowEditing]="false"></dxi-column>
     <dxi-column dataField="examplesOfUse" [calculateCellValue]="calculateExamplesOfUse" cellTemplate="exampleOfUseCellTemplate">
         <dxo-form-item
             editorType="dxTextArea">
         </dxo-form-item>
     </dxi-column>
-    <dxi-column cellTemplate="linksTemplate"></dxi-column>
+    <dxi-column cellTemplate="linksTemplate">
+        <dxo-form-item
+            [visible]="false">
+        </dxo-form-item>
+    </dxi-column>
     <dxi-column
-        dataField="synonyms"
+        caption="Related words:"
+        dataField="relatedLexicalUnits"
         [visible]="false">
         <dxo-lookup
-            [dataSource]="getFilteredWords2"
-            displayExpr="text">
+            [dataSource]="getFilteredWords"
+            [displayExpr]="displayRelatedLexicalUnit">
         </dxo-lookup>
         <dxo-form-item
             editorType="dxTagBox"
@@ -48,8 +53,8 @@
     <dxo-selection mode="single"></dxo-selection>
 
     <div *dxTemplate="let row of 'detail'">
-        <div *ngIf="row.data.synonyms">
-            <span class="synonym" *ngFor="let synonym of row.data.synonyms">{{synonym.text}}</span>
+        <div *ngIf="row.data.relatedLexicalUnits">
+            <span class="synonym" *ngFor="let synonym of row.data.relatedLexicalUnits">{{synonym.text}}</span>
         </div>
     </div>
 

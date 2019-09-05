@@ -11,7 +11,7 @@
  */
 
 
-export type PartOfSpeech = 'None' | 'Verb' | 'Noun' | 'Adjective' | 'Preposition' | 'Pronoun' | 'Article';
+export type PartOfSpeech = 'None' | 'Verb' | 'Noun' | 'Adjective' | 'Preposition' | 'Pronoun' | 'Article' | 'Particle';
 
 export const PartOfSpeech = {
     None: 'None' as PartOfSpeech,
@@ -20,5 +20,6 @@ export const PartOfSpeech = {
     Adjective: 'Adjective' as PartOfSpeech,
     Preposition: 'Preposition' as PartOfSpeech,
     Pronoun: 'Pronoun' as PartOfSpeech,
-    Article: 'Article' as PartOfSpeech
+    Article: 'Article' as PartOfSpeech,
+    Particle: 'Particle' as PartOfSpeech
 };

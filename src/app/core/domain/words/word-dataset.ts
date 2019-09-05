@@ -34,10 +34,21 @@ export class WordDataSet {
     }
 
     toApi(word: Word) {
-        return Object.assign(<api.LexicalUnit>{}, word, {synonyms: word.relatedLexicalUnits && word.relatedLexicalUnits.map(x => x.lexicalUnitId)});
+        return Object.assign(<api.LexicalUnit>{}, word, {
+            relatedLexicalUnits: word.relatedLexicalUnits && word.relatedLexicalUnits.map(x => ({
+                lexicalUnitId: x.word.id,
+                attribute: x.attribute
+            }))
+        });
     }
 
     toDomain(word: api.LexicalUnit, list: api.LexicalUnit[]) {
-        return Object.assign(<Word>{}, word, { relatedLexicalUnit: list.filter(x => word.relatedLexicalUnits.map(unit => unit.lexicalUnitId).includes(x.id))});
+        let relatedLexicalUnits = !word.relatedLexicalUnits ? [] :
+            word.relatedLexicalUnits.map(x => ({
+                word: Object.assign(<Word>{}, list.find(item => item.id == x.lexicalUnitId)),
+                attribute: x.attribute
+            }));
+
+        return Object.assign(<Word>{}, word, { relatedLexicalUnits });
     }
 }

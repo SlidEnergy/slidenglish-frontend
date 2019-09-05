@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
-import {WordsService} from '../../words.service';
-import {Word} from "../../../core/domain/words/word";
+import {WordsService} from '../words.service';
+import {Word} from "../../core/domain/words/word";
 
 @Component({
     selector: 'app-words-page',

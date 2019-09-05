@@ -11,10 +11,11 @@
  */
 
 
-export type RelationAttribute = 'None' | 'Synonym' | 'RootWord';
+export type RelationAttribute = 'None' | 'Synonym' | 'RootWord' | 'VerbForm';
 
 export const RelationAttribute = {
     None: 'None' as RelationAttribute,
     Synonym: 'Synonym' as RelationAttribute,
-    RootWord: 'RootWord' as RelationAttribute
+    RootWord: 'RootWord' as RelationAttribute,
+    VerbForm: 'VerbForm' as RelationAttribute
 };
