@@ -13,6 +13,11 @@
     keyExpr="id"
     [columnAutoWidth]="true">
 
+    <dxo-filter-row
+        [visible]="true"></dxo-filter-row>
+    <dxo-header-filter
+        [visible]="true"></dxo-header-filter>
+
     <!--    (onRowClick)="grid_rowClick($event)"-->
     <dxo-editing
         mode="form"
@@ -27,7 +32,8 @@
     <dxi-column dataField="inputAttributes">
         <dxo-form-item [visible]="false"></dxo-form-item>
     </dxi-column>
-    <dxi-column dataField="examplesOfUse" [calculateCellValue]="calculateExamplesOfUse" cellTemplate="exampleOfUseCellTemplate">
+    <dxi-column dataField="examplesOfUse" [calculateCellValue]="calculateExamplesOfUse"
+                cellTemplate="exampleOfUseCellTemplate">
         <dxo-form-item
             editorType="dxTextArea">
         </dxo-form-item>
