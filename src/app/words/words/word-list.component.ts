@@ -1,12 +1,13 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {forkJoin, iif, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {Router} from '@angular/router';
 
 import {Word} from "../../core/domain/words/word";
 import {WordsService} from "../words.service";
-import {map, switchMap, tap} from "rxjs/operators";
+import {catchError, map, mapTo, switchMap, tap} from "rxjs/operators";
 import {showError, showSuccess} from "../../shared/utils/message-utils";
-import {RelationAttribute} from "src/app/api";
+import {ExampleOfUse, RelationAttribute} from "src/app/api";
+import {WordRelation} from "../../core/domain/words/word-relation";
 
 @Component({
     selector: 'app-word-list',
@@ -31,67 +32,102 @@ export class WordListComponent implements OnInit {
         this.router.navigate(['words', event.data.id]);
     }
 
-    grid_rowRemoving(event: { data: Word }) {
-        this.wordsService.delete(event.data.id).subscribe(
-            value => showSuccess('Слово удалено'),
-            error => showError('Не удалось удалить слово'));
+    grid_onInitNewRow(event: {data: any}) {
+        event.data = new Word();
     }
 
-    grid_rowUpdating(event) {
-        let hasNewRelatedLexicalUnits = event.newData.relatedLexicalUnits && event.newData.relatedLexicalUnits.filter(x => x.word.id === undefined).length > 0;
+    grid_rowRemoving(event: { data: Word, cancel: Promise<boolean> }) {
+        event.cancel = this.wordsService.delete(event.data.id).pipe(
+            mapTo(false),
+            catchError(error => {
+                console.error(error);
+                showError('Не удалось удалить слово');
+                return of(true);
+            })
+        ).toPromise();
+    }
 
-        let relationsToAdd = event.newData.relatedLexicalUnits.filter(x => x.word.id === undefined);
+    grid_rowRemoved() {
+        showSuccess('Слово удалено');
+    }
+
+    grid_rowUpdating(event: {oldData: Word, newData: { relatedLexicalUnits?: WordRelation[], examplesOfUse?: ExampleOfUse[] | string}, cancel: Promise<boolean>}) {
+        let createNewRelations$ = of<WordRelation[]>([]);
+
+        const word = Object.assign(event.oldData, event.newData);
+
+        if(event.newData.examplesOfUse && typeof event.newData.examplesOfUse === 'string')
+            word.examplesOfUse = event.newData.examplesOfUse.split('\n').map(x=> ({ example: x }));
+
+        let relationsToAdd = event.newData.relatedLexicalUnits ? event.newData.relatedLexicalUnits.filter(x => !x.word.id) : [];
+
+        let hasNewRelatedLexicalUnits = relationsToAdd.length > 0;
+
+        if(hasNewRelatedLexicalUnits) {
+            createNewRelations$ = this.createRelatedLexicalUnits(relationsToAdd).pipe(
+                tap(relations => word.relatedLexicalUnits = event.newData.relatedLexicalUnits.map(x=> !x.word.id ? relations.find(r => r.word.text = x.word.text) : x))
+            );
+        }
+
+        event.cancel = createNewRelations$.pipe(
+            switchMap(x=> this.wordsService.update(word.id, word)),
+            mapTo(false),
+            catchError(error => {
+                console.error(error);
+                showError('Не удалось изменить слово');
+                return of(true);
+            })
+        ).toPromise();
+    }
+
+    grid_rowUpdated(event) {
+        showSuccess('Слово изменено');
+    }
+
+    createRelatedLexicalUnits(relations: WordRelation[]): Observable<WordRelation[]> {
+        if(!relations || relations.length == 0)
+            return of<WordRelation[]>();
 
         // Поток создания новых синонимов
-        let createLexicalUnitRelations = forkJoin(
-            relationsToAdd
-                .map(x => this.wordsService.add(x.word).pipe(map(newWord => ({ word: newWord, attribute: x.attribute})))))
-        .pipe(
-                // Добавляем новые слова в коллекцию
-                tap((newSynonyms: Word[]) => newSynonyms.forEach(x => this.words.push(x)))
+        return forkJoin(relations
+                .map(x => this.wordsService.add(x.word).pipe(map(newWord => ({
+                    wordId: newWord.id,
+                    word: newWord,
+                    attribute: x.attribute
+                })))));
+    }
+
+    grid_rowInserting(event: { data: any, cancel: Promise<boolean> }) {
+        let createNewRelations$ = of<WordRelation[]>([]);
+
+        const word = event.data;
+
+        if(event.data.examplesOfUse && typeof event.data.examplesOfUse === 'string')
+            word.examplesOfUse = event.data.examplesOfUse.split('\n').map(x=> ({ example: x }));
+
+        if(event.data.relatedLexicalUnits || event.data.relatedLexicalUnits.length > 0) {
+            createNewRelations$ = this.createRelatedLexicalUnits(event.data.relatedLexicalUnits).pipe(
+                tap(newRelations => word.relatedLexicalUnits = newRelations),
             );
+        }
 
-        // Если нужно создавать синонимы, создаем их, иначе переходим к обновлению сущности
-        iif(() => hasNewRelatedLexicalUnits,
-            // then
-            createLexicalUnitRelations.pipe(map((newRelatedLexicalUnits: Word[]) => this.addNewRelatedLexicalUnit(this.getResultEntity(event), newRelatedLexicalUnits))),
-            // else
-            of(this.getResultEntity(event))
-        )
-            .pipe(
-                // Обновляем сущность
-                switchMap(word => this.wordsService.update(word.id, word)))
-            .subscribe(
-                value => showSuccess('Слово изменено'),
-                error => showError('Не удалось изменить слово')
-            );
+        event.cancel = createNewRelations$.pipe(
+            switchMap(x=> this.wordsService.add(word)),
+            mapTo(false),
+            catchError(error => {
+                console.error(error);
+                showError('Не удалось добавить слово');
+                return of(true);
+            })
+        ).toPromise();
     }
 
-    addNewRelatedLexicalUnit(entity: Word, newRelatedLexicalUnits) {
-        return Object.assign(entity, {relatedLexicalUnits: [...entity.relatedLexicalUnits.filter(x => x.word.id), ...newRelatedLexicalUnits]});
-    }
-
-    private getResultEntity<T>(event) {
-        return this.toEntity(Object.assign(<T>{}, event.oldData, event.newData));
-    }
-
-    private toEntity(entity: any) {
-        if(!entity.examplesOfUse || Array.isArray(entity.examplesOfUse))
-            return entity;
-
-        return { ...entity, examplesOfUse: entity.examplesOfUse.split('\n').map(x=> ({ example: x }))};
-    }
-
-    grid_rowInserting(event) {
-        this.wordsService.add(this.toEntity(event.data))
-            .subscribe(
-                value => showSuccess('Слово добавлено'),
-                error => showError('Не удалось добавить слово')
-            );
+    grid_rowInserted() {
+        showSuccess('Слово добавлено');
     }
 
     tagBox_customItemCreating = (event) => {
-        event.customItem = { word: { text: event.text }, attribute: RelationAttribute.None };
+        event.customItem = { word: new Word({ text: event.text }), attribute: RelationAttribute.None };
     };
 
     calculateExamplesOfUse = (rowData: Word | { examplesOfUse: string }) => {
