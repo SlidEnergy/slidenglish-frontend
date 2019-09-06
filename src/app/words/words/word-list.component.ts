@@ -86,7 +86,7 @@ export class WordListComponent implements OnInit {
 
     createRelatedLexicalUnits(relations: WordRelation[]): Observable<WordRelation[]> {
         if(!relations || relations.length == 0)
-            return of<WordRelation[]>();
+            return of<WordRelation[]>([]);
 
         // Поток создания новых синонимов
         return forkJoin(relations
@@ -105,7 +105,7 @@ export class WordListComponent implements OnInit {
         if(event.data.examplesOfUse && typeof event.data.examplesOfUse === 'string')
             word.examplesOfUse = event.data.examplesOfUse.split('\n').map(x=> ({ example: x }));
 
-        if(event.data.relatedLexicalUnits || event.data.relatedLexicalUnits.length > 0) {
+        if(event.data.relatedLexicalUnits.length > 0) {
             createNewRelations$ = this.createRelatedLexicalUnits(event.data.relatedLexicalUnits).pipe(
                 tap(newRelations => word.relatedLexicalUnits = newRelations),
             );
