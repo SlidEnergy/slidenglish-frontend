@@ -3,6 +3,7 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
+import { ImportService } from './api/import.service';
 import { LexicalUnitsService } from './api/lexicalUnits.service';
 import { TokenService } from './api/token.service';
 import { TranslateService } from './api/translate.service';
@@ -13,6 +14,7 @@ import { UsersService } from './api/users.service';
   declarations: [],
   exports:      [],
   providers: [
+    ImportService,
     LexicalUnitsService,
     TokenService,
     TranslateService,

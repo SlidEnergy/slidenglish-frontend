@@ -9,7 +9,7 @@ import {
 } from '@angular/material';
 
 import { MatProgressButtonsModule } from 'mat-progress-buttons'
-import {DxDataGridModule, DxTagBoxModule, DxTextAreaModule} from 'devextreme-angular';
+import {DxButtonModule, DxDataGridModule, DxTagBoxModule, DxTextAreaModule} from 'devextreme-angular';
 import { LogPipe } from './pipes/log.pipe';
 
 @NgModule({
@@ -44,6 +44,7 @@ import { LogPipe } from './pipes/log.pipe';
         DxDataGridModule,
         DxTagBoxModule,
         DxTextAreaModule,
+        DxButtonModule,
 
         LogPipe
     ],

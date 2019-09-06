@@ -1,5 +1,6 @@
 export * from './exampleOfUse';
 export * from './exampleOfUseAttribute';
+export * from './importDataBindingModel';
 export * from './lexicalUnit';
 export * from './lexicalUnitInputAttribute';
 export * from './lexicalUnitRelation';

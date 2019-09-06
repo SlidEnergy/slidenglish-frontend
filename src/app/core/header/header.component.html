@@ -1,47 +1,53 @@
 <mat-toolbar color="primary">
-   <mat-toolbar-row>
-      <span class="title">Slid English</span>
-      <span class="spacer"></span>
-      <button mat-icon-button
-              fxShow="true"
-              fxHide.gt-sm
-              [matMenuTriggerFor]="appMenu">
-         <mat-icon>more_vert</mat-icon>
-      </button>
-      <div fxShow="true"
-           fxHide.lt-md>
-         <a mat-button
-            *ngIf="isLoggedIn | async"
-            routerLink="/words">Слова</a>
-          <a mat-button
-             *ngIf="isLoggedIn | async"
-             routerLink="/translate">Перевод</a>
-         <a mat-button
-            *ngIf="!(isLoggedIn | async)"
-            routerLink="/entry/register">Регистрация</a>
-         <a mat-button
-            *ngIf="!(isLoggedIn | async)"
-            routerLink="/entry/login">Вход</a>
-         <a mat-button
-            *ngIf="isLoggedIn | async"
-            (click)="logout()">Выход</a>
-      </div>
-   </mat-toolbar-row>
+    <mat-toolbar-row>
+        <span class="title">Slid English</span>
+        <span class="spacer"></span>
+        <button mat-icon-button
+                fxShow="true"
+                fxHide.gt-sm
+                [matMenuTriggerFor]="appMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <div fxShow="true"
+             fxHide.lt-md>
+            <a mat-button
+               *ngIf="isLoggedIn | async"
+               routerLink="/words">Слова</a>
+            <a mat-button
+               *ngIf="isLoggedIn | async"
+               routerLink="/translate">Перевод</a>
+            <a mat-button
+               *ngIf="isLoggedIn | async"
+               routerLink="/words/import">Импорт</a>
+            <a mat-button
+               *ngIf="!(isLoggedIn | async)"
+               routerLink="/entry/register">Регистрация</a>
+            <a mat-button
+               *ngIf="!(isLoggedIn | async)"
+               routerLink="/entry/login">Вход</a>
+            <a mat-button
+               *ngIf="isLoggedIn | async"
+               (click)="logout()">Выход</a>
+        </div>
+    </mat-toolbar-row>
 </mat-toolbar>
 <mat-menu #appMenu="matMenu">
-   <a mat-menu-item
-      *ngIf="isLoggedIn | async"
-      routerLink="/words">Слова</a>
+    <a mat-menu-item
+       *ngIf="isLoggedIn | async"
+       routerLink="/words">Слова</a>
     <a mat-menu-item
        *ngIf="isLoggedIn | async"
        routerLink="/translate">Перевод</a>
-   <a mat-menu-item
-      *ngIf="!(isLoggedIn | async)"
-      routerLink="/entry/register">Регистрация</a>
-   <a mat-menu-item
-      *ngIf="!(isLoggedIn | async)"
-      routerLink="/entry/login">Вход</a>
-   <a mat-menu-item
-      *ngIf="isLoggedIn | async"
-      (click)="logout()">Выход</a>
+    <a mat-menu-item
+       *ngIf="isLoggedIn | async"
+       routerLink="/words/import">Импорт</a>
+    <a mat-menu-item
+       *ngIf="!(isLoggedIn | async)"
+       routerLink="/entry/register">Регистрация</a>
+    <a mat-menu-item
+       *ngIf="!(isLoggedIn | async)"
+       routerLink="/entry/login">Вход</a>
+    <a mat-menu-item
+       *ngIf="isLoggedIn | async"
+       (click)="logout()">Выход</a>
 </mat-menu>

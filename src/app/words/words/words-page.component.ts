@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {WordsService} from '../words.service';
 import {Word} from "../../core/domain/words/word";
-import {filter, switchMap} from "rxjs/operators";
+import {switchMap} from "rxjs/operators";
 
 @Component({
     selector: 'app-words-page',

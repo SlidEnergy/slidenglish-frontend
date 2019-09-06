@@ -1,10 +1,11 @@
-<dx-text-area
-    #inputTextArea
-    [(value)]="text"
-    spellcheck="true"
-    valueChangeEvent="keyup">
-</dx-text-area>
-<dx-text-area
-    [readOnly]="true"
-    [value]="translatedText | async">
-</dx-text-area>
+<dx-button text="Translate" (click)="translate($event)"></dx-button>
+<div class="areas">
+    <dx-text-area
+        [(value)]="text"
+        spellcheck="true">
+    </dx-text-area>
+    <dx-text-area
+        [readOnly]="true"
+        [value]="translatedText | async">
+    </dx-text-area>
+</div>
