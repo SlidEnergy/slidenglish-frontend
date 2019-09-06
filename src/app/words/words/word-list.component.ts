@@ -47,7 +47,7 @@ export class WordListComponent implements OnInit {
         ).toPromise();
     }
 
-    grid_rowRemoved() {
+    grid_rowRemoved(event) {
         showSuccess('Слово удалено');
     }
 
@@ -122,7 +122,7 @@ export class WordListComponent implements OnInit {
         ).toPromise();
     }
 
-    grid_rowInserted() {
+    grid_rowInserted(event) {
         showSuccess('Слово добавлено');
     }
 
