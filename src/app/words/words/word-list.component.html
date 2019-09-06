@@ -1,8 +1,12 @@
 <dx-data-grid
     [dataSource]="words"
+    (onInitNewRow)="grid_onInitNewRow($event)"
     (onRowInserting)="grid_rowInserting($event)"
+    (onRowInserted)="grid_rowInserted($event)"
     (onRowUpdating)="grid_rowUpdating($event)"
+    (onRowUpdated)="grid_rowUpdated($event)"
     (onRowRemoving)="grid_rowRemoving($event)"
+    (onRowRemoved)="grid_rowRemoved($event)"
     [masterDetail]="{ enabled: false, template: 'detail' }"
     (onSelectionChanged)="selectionChanged($event)"
     [allowColumnResizing]="true"

@@ -22,33 +22,26 @@ export class WordDataSet {
     }
 
     add(word: Word) {
-        return this.repository.add(this.toApi(word));
+        return this.repository.add(word.model).pipe(map(x=>this.toDomain(x)));
     }
 
     update(id: number, word: Word) {
-        return this.repository.update(id, this.toApi(word));
+        return this.repository.update(id, word.model).pipe(map(x=>this.toDomain(x)));
     }
 
     delete(id: number) {
         return this.repository.delete(id);
     }
 
-    toApi(word: Word) {
-        return Object.assign(<api.LexicalUnit>{}, word, {
-            relatedLexicalUnits: word.relatedLexicalUnits && word.relatedLexicalUnits.map(x => ({
-                lexicalUnitId: x.word.id,
-                attribute: x.attribute
-            }))
-        });
-    }
+    toDomain(word: api.LexicalUnit, list?: api.LexicalUnit[]): Word {
+        let apiRelatedLexicalUnits = word.relatedLexicalUnits || [];
 
-    toDomain(word: api.LexicalUnit, list: api.LexicalUnit[]) {
-        let relatedLexicalUnits = !word.relatedLexicalUnits ? [] :
-            word.relatedLexicalUnits.map(x => ({
-                word: Object.assign(<Word>{}, list.find(item => item.id == x.lexicalUnitId)),
+        let relatedLexicalUnits = apiRelatedLexicalUnits.map(x => ({
+                wordId: x.lexicalUnitId,
+                word: list ? this.toDomain(list.find(item => item.id == x.lexicalUnitId)) : undefined,
                 attribute: x.attribute
             }));
 
-        return Object.assign(<Word>{}, word, { relatedLexicalUnits });
+        return new Word(word, relatedLexicalUnits);
     }
 }

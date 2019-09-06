@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {WordsService} from '../words.service';
 import {Word} from "../../core/domain/words/word";
+import {filter, switchMap} from "rxjs/operators";
 
 @Component({
     selector: 'app-words-page',
@@ -17,7 +18,6 @@ export class WordsPageComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.wordsService.load().subscribe();
-        this.words = this.wordsService.getList();
+        this.words = this.wordsService.load().pipe(switchMap(x=> this.wordsService.getList()));
     }
 }
