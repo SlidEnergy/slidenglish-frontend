@@ -37,6 +37,13 @@ export class Word {
         this._model.association = value;
     }
 
+    get translation(): string {
+        return this._model.translation;
+    }
+    set translation(value: string) {
+        this._model.translation = value;
+    }
+
     get notes(): string {
         return this._model.notes;
     }

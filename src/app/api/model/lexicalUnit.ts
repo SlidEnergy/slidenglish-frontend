@@ -25,6 +25,7 @@ export interface LexicalUnit {
     usagesCount?: number;
     partOfSpeech?: PartOfSpeech;
     examplesOfUse?: Array<ExampleOfUse>;
+    translation?: string;
     isWord?: boolean;
     isPhrase?: boolean;
 }

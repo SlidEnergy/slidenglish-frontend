@@ -28,7 +28,7 @@
 
     <dxi-column dataField="text" caption="Word" cellTemplate="wordCellTemplate" [sortIndex]="0"
                 sortOrder="asc"></dxi-column>
-    <dxi-column dataField="association" [visible]="false"></dxi-column>
+
     <dxi-column dataField="inputAttributes">
         <dxo-form-item [visible]="false"></dxo-form-item>
     </dxi-column>
@@ -43,8 +43,9 @@
             [visible]="false">
         </dxo-form-item>
     </dxi-column>
+    <dxi-column dataField="association" [visible]="false"></dxi-column>
     <dxi-column
-        caption="Related words:"
+        caption="Related words"
         dataField="relatedLexicalUnits"
         [visible]="false">
         <dxo-lookup
@@ -56,6 +57,7 @@
             [editorOptions]="{ acceptCustomValue: true, onCustomItemCreating: tagBox_customItemCreating}">
         </dxo-form-item>
     </dxi-column>
+    <dxi-column dataField="translation" [visible]="false"></dxi-column>
     <dxi-column dataField="notes" [visible]="false">
         <dxo-form-item editorType="dxTextArea" [colSpan]="2"></dxo-form-item>
     </dxi-column>
