@@ -83,6 +83,8 @@
     <div *dxTemplate="let cell of 'linksTemplate'">
         <a [href]="'https://puzzle-english.com/find?query=' + cell.data.text" target="_blank"><img
             src="assets/img/puzzle-english.jpg" height="24" title="Puzzle english"/></a>,
+        <a [href]="'https://www.urbandictionary.com/define.php?term=' + cell.data.text" target="_blank"><img
+            src="assets/img/urban-dictionary.png" height="24" title="Urban dictionary"/></a>,
         <a [href]="'https://www.multitran.com/m.exe?l1=1&l2=2&s=' + cell.data.text" target="_blank"><img
             src="assets/img/multitran.jpg" height="24" title="Мультитран"/></a>,
         <a [href]="'https://www.merriam-webster.com/dictionary/' + cell.data.text" target="_blank"><img
