@@ -22,13 +22,13 @@ export class DateInterceptor implements HttpInterceptor {
     }));
   }
 
-  convertToDate(body) {
+  convertToDate(body: any) {
     if (body === null || body === undefined) {
-      return body;
+      return;
     }
 
     if (typeof body !== 'object') {
-      return body;
+      return;
     }
 
     for (const key of Object.keys(body)) {
@@ -41,7 +41,7 @@ export class DateInterceptor implements HttpInterceptor {
     }
   }
 
-  isIso8601(value) {
+  isIso8601(value: any) {
     if (value === null || value === undefined) {
       return false;
     }

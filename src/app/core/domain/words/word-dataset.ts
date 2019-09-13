@@ -36,11 +36,16 @@ export class WordDataSet {
     toDomain(word: api.LexicalUnit, list?: api.LexicalUnit[]): Word {
         let apiRelatedLexicalUnits = word.relatedLexicalUnits || [];
 
-        let relatedLexicalUnits = apiRelatedLexicalUnits.map(x => ({
+        let relatedLexicalUnits = apiRelatedLexicalUnits.map(x => {
+
+            let word = list ? list.find(item => item.id == x.lexicalUnitId) : undefined;
+
+            return {
                 wordId: x.lexicalUnitId,
-                word: list ? this.toDomain(list.find(item => item.id == x.lexicalUnitId)) : undefined,
+                word: word ? this.toDomain(word) : undefined,
                 attribute: x.attribute
-            }));
+            }
+        });
 
         return new Word(word, relatedLexicalUnits);
     }

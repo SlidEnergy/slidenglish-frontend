@@ -9,7 +9,7 @@ export class Word {
 
     get model(): api.LexicalUnit {
         this._model.relatedLexicalUnits = this.relatedLexicalUnits.map(x => ({
-            lexicalUnitId: x.word.id,
+            lexicalUnitId: x.word ? x.word.id : x.wordId,
             attribute: x.attribute
         }));
 
@@ -19,7 +19,7 @@ export class Word {
     get id(): number | undefined {
         return this._model.id;
     }
-    set id(value: number) {
+    set id(value: number | undefined) {
         this._model.id = value;
     }
 

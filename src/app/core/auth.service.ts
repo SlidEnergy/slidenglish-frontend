@@ -3,10 +3,8 @@ import { throwError as observableThrowError, Observable, ReplaySubject } from 'r
 import { Injectable } from '@angular/core';
 
 import { catchError, map } from 'rxjs/operators';
-import { UsersService } from '../api/api/users.service';
-
 import { MatSnackBar } from '@angular/material';
-import { User, TokenService, TokenInfo } from '../api';
+import { User, TokenService, TokenInfo, UsersService } from '../api';
 
 @Injectable()
 export class AuthService {
@@ -103,7 +101,7 @@ export class AuthService {
 	public get email(): Observable<string> {
 		return this._currentUser.pipe(map((user) => {
 			if (user !== null) {
-				return user.email;
+				return user.email || '';
 			}
 
 			return '';
@@ -170,35 +168,39 @@ export class AuthService {
 	}
 
 	// Получает токен из локального хранилища браузера
-	public static getAccessToken() {
-		let auth = localStorage.getItem('auth');
+	public static getAccessToken() : string | undefined {
+		const json = localStorage.getItem('auth') || '';
+
+		let auth: any = undefined;
 
 		try {
-			auth = auth && JSON.parse(auth);
+			auth = JSON.parse(json);
 		} catch {
-			auth = null;
-		}
+		    return;
+        }
 
-		if (auth && auth['token'] && AuthService.validateAccessToken(auth['token']))
-			return auth['token'];
-		else
-			null;
+		if (auth && auth.token && AuthService.validateAccessToken(auth.token))
+			return auth.token;
+
+        return;
 	}
 
 	// Получает токен из локального хранилища браузера
 	private static getRefreshToken() {
-		let auth = localStorage.getItem('auth');
+		const json = localStorage.getItem('auth') || '';
+
+		let auth: any = undefined;
 
 		try {
-			auth = auth && JSON.parse(auth);
+			auth = JSON.parse(json);
 		} catch {
-			auth = null;
+			return;
 		}
 
-		if (auth && auth['refreshToken'] && AuthService.validateAccessToken(auth['refreshToken']))
-			return auth['refreshToken'];
-		else
-			null;
+		if (auth && auth.refreshToken && AuthService.validateAccessToken(auth.refreshToken))
+			return auth.refreshToken;
+
+        return;
 	}
 
 	// Проверяет токен
