@@ -33,3 +33,12 @@
 .examples-of-use {
     white-space: pre-wrap;
 }
+.detail-row {
+    &:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+
+    .detail-label {
+        color: darkgray;
+    }
+}

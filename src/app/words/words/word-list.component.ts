@@ -141,8 +141,8 @@ export class WordListComponent implements OnInit {
     };
 
     selectionChanged(e) {
-        // e.component.collapseAll(-1);
-        // e.component.expandRow(e.currentSelectedRowKeys[0]);
+        e.component.collapseAll(-1);
+        e.component.expandRow(e.currentSelectedRowKeys[0]);
     }
 
     getFilteredWords(options) {

@@ -10,7 +10,8 @@
     [masterDetail]="{ enabled: false, template: 'detail' }"
     (onSelectionChanged)="selectionChanged($event)"
     [allowColumnResizing]="true"
-    keyExpr="id">
+    keyExpr="id"
+    [columnChooser]="{ enabled: true }">
 
     <dxo-filter-row
         [visible]="true"></dxo-filter-row>
@@ -31,7 +32,7 @@
     <dxi-column dataField="inputAttributes">
         <dxo-form-item [visible]="false"></dxo-form-item>
     </dxi-column>
-    <dxi-column dataField="examplesOfUse" [calculateCellValue]="calculateExamplesOfUse"
+    <dxi-column dataField="examplesOfUse" [visible]="false" [calculateCellValue]="calculateExamplesOfUse"
                 cellTemplate="exampleOfUseCellTemplate">
         <dxo-form-item
             editorType="dxTextArea">
@@ -64,16 +65,24 @@
     <dxo-selection mode="single"></dxo-selection>
 
     <div *dxTemplate="let row of 'detail'">
-        <div *ngIf="row.data.relatedLexicalUnits">
-            <span class="synonym" *ngFor="let synonym of row.data.relatedLexicalUnits">{{synonym.text}}</span>
+        <div class="detail-row" *ngIf="row.data.translation" title="translation"><span class="detail-label">Translation: </span>{{row.data.translation}}</div>
+        <div class="detail-row" *ngIf="row.data.relatedLexicalUnits" title="Related words">
+            <span class="detail-label">Related words: </span><span class="synonym" *ngFor="let synonym of row.data.relatedLexicalUnits">{{synonym.word.text}}</span>
+        </div>
+        <div class="detail-row" *ngIf="row.data.examplesOfUse && row.data.examplesOfUse.length > 0" title="Examples of use">
+            <span class="detail-label">Examples of use:</span>
+            <div *ngFor="let example of row.data.examplesOfUse">{{example.example}}</div>
         </div>
     </div>
 
     <div *dxTemplate="let cell of 'wordCellTemplate'">
-        <div class="word"><span>{{cell.data.text}}</span><span *ngIf="cell.data.usagesCount"
-                                                               class="usages"> ({{cell.data.usagesCount}})</span></div>
-        <div class="association" *ngIf="cell.data.association">{{cell.data.association}}</div>
-        <div class="description" *ngIf="cell.data.notes">{{cell.data.notes}}</div>
+        <div class="word">
+            <span title="Word">{{cell.data.text}}</span>
+            <span *ngIf="cell.data.usagesCount" title="Usages count"
+                  class="usages"> ({{cell.data.usagesCount}})</span>
+        </div>
+        <div class="association" *ngIf="cell.data.association" title="Association">{{cell.data.association}}</div>
+        <div class="description" *ngIf="cell.data.notes" title="Notes">{{cell.data.notes}}</div>
     </div>
 
     <div *dxTemplate="let cell of 'exampleOfUseCellTemplate'">
